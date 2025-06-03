@@ -2,6 +2,8 @@
 import Hero from "@/components/Hero";
 import About from "@/components/About";
 import LiveLeaderboards from "@/components/LiveLeaderboards";
+import StatsDashboard from "@/components/StatsDashboard";
+import PlayerComparison from "@/components/PlayerComparison";
 import HowItWorks from "@/components/HowItWorks";
 import PlayerOfTheWeek from "@/components/PlayerOfTheWeek";
 import ClubContact from "@/components/ClubContact";
@@ -13,6 +15,8 @@ const Index = () => {
       <Hero />
       <About />
       <LiveLeaderboards />
+      <StatsDashboard />
+      <PlayerComparison />
       <HowItWorks />
       <PlayerOfTheWeek />
       <ClubContact />
