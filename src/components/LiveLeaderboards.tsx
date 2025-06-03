@@ -1,12 +1,12 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Basketball, Football, Cricket, Badminton } from "lucide-react";
+import { Trophy, Target, Zap, Star } from "lucide-react";
 
 const LiveLeaderboards = () => {
   const sports = [
     {
       name: "Basketball",
-      icon: Basketball,
+      icon: Trophy,
       emoji: "🏀",
       color: "from-orange-500 to-orange-600",
       players: [
@@ -17,7 +17,7 @@ const LiveLeaderboards = () => {
     },
     {
       name: "Cricket",
-      icon: Cricket,
+      icon: Target,
       emoji: "🏏",
       color: "from-green-500 to-green-600",
       players: [
@@ -28,7 +28,7 @@ const LiveLeaderboards = () => {
     },
     {
       name: "Football",
-      icon: Football,
+      icon: Zap,
       emoji: "⚽",
       color: "from-blue-500 to-blue-600",
       players: [
@@ -39,7 +39,7 @@ const LiveLeaderboards = () => {
     },
     {
       name: "Badminton",
-      icon: Badminton,
+      icon: Star,
       emoji: "🏸",
       color: "from-purple-500 to-purple-600",
       players: [
