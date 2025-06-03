@@ -1,6 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { TrendingUp } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Hero = () => {
   return (
@@ -35,13 +36,46 @@ const Hero = () => {
           Real-time leaderboards, player stats, and campus athletic excellence—all in one dynamic platform ⚡
         </p>
         
-        <Button 
-          size="lg"
-          className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-8 py-4 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
-        >
-          <TrendingUp className="mr-2 h-5 w-5" />
-          View Leaderboards 🎯
-        </Button>
+        {/* Sport Navigation Cards */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 max-w-2xl mx-auto">
+          <Link to="/basketball" className="group">
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 hover:bg-white/20 transition-all duration-300 hover:scale-105">
+              <div className="text-3xl mb-2">🏀</div>
+              <p className="text-sm font-semibold">Basketball</p>
+            </div>
+          </Link>
+          
+          <Link to="/cricket" className="group">
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 hover:bg-white/20 transition-all duration-300 hover:scale-105">
+              <div className="text-3xl mb-2">🏏</div>
+              <p className="text-sm font-semibold">Cricket</p>
+            </div>
+          </Link>
+          
+          <Link to="/football" className="group">
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 hover:bg-white/20 transition-all duration-300 hover:scale-105">
+              <div className="text-3xl mb-2">⚽</div>
+              <p className="text-sm font-semibold">Football</p>
+            </div>
+          </Link>
+          
+          <Link to="/badminton" className="group">
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 hover:bg-white/20 transition-all duration-300 hover:scale-105">
+              <div className="text-3xl mb-2">🏸</div>
+              <p className="text-sm font-semibold">Badminton</p>
+            </div>
+          </Link>
+        </div>
+        
+        <Link to="/basketball">
+          <Button 
+            size="lg"
+            className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-8 py-4 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+          >
+            <TrendingUp className="mr-2 h-5 w-5" />
+            View Leaderboards 🎯
+          </Button>
+        </Link>
       </div>
     </section>
   );

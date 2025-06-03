@@ -1,11 +1,13 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Trophy, Target, Zap, Star } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const LiveLeaderboards = () => {
   const sports = [
     {
       name: "Basketball",
+      path: "/basketball",
       icon: Trophy,
       emoji: "🏀",
       color: "from-orange-500 to-orange-600",
@@ -17,6 +19,7 @@ const LiveLeaderboards = () => {
     },
     {
       name: "Cricket",
+      path: "/cricket",
       icon: Target,
       emoji: "🏏",
       color: "from-green-500 to-green-600",
@@ -28,6 +31,7 @@ const LiveLeaderboards = () => {
     },
     {
       name: "Football",
+      path: "/football",
       icon: Zap,
       emoji: "⚽",
       color: "from-blue-500 to-blue-600",
@@ -39,6 +43,7 @@ const LiveLeaderboards = () => {
     },
     {
       name: "Badminton",
+      path: "/badminton",
       icon: Star,
       emoji: "🏸",
       color: "from-purple-500 to-purple-600",
@@ -62,33 +67,39 @@ const LiveLeaderboards = () => {
         
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {sports.map((sport) => (
-            <Card key={sport.name} className="hover:shadow-lg transition-all duration-300 hover:scale-105 border-0 bg-white/80 backdrop-blur-sm">
-              <CardHeader className={`bg-gradient-to-r ${sport.color} text-white rounded-t-lg`}>
-                <CardTitle className="flex items-center justify-center text-xl">
-                  <span className="text-2xl mr-2">{sport.emoji}</span>
-                  {sport.name}
-                </CardTitle>
-              </CardHeader>
-              
-              <CardContent className="p-4">
-                <div className="space-y-3">
-                  {sport.players.map((player) => (
-                    <div key={player.name} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                      <div className="flex items-center">
-                        <span className="w-6 h-6 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white text-sm font-bold rounded-full flex items-center justify-center mr-3">
-                          {player.position}
-                        </span>
-                        <div>
-                          <p className="font-semibold text-gray-800">{player.name}</p>
-                          <p className="text-sm text-gray-600">{player.stat}</p>
+            <Link key={sport.name} to={sport.path}>
+              <Card className="hover:shadow-lg transition-all duration-300 hover:scale-105 border-0 bg-white/80 backdrop-blur-sm cursor-pointer">
+                <CardHeader className={`bg-gradient-to-r ${sport.color} text-white rounded-t-lg`}>
+                  <CardTitle className="flex items-center justify-center text-xl">
+                    <span className="text-2xl mr-2">{sport.emoji}</span>
+                    {sport.name}
+                  </CardTitle>
+                </CardHeader>
+                
+                <CardContent className="p-4">
+                  <div className="space-y-3">
+                    {sport.players.map((player) => (
+                      <div key={player.name} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div className="flex items-center">
+                          <span className="w-6 h-6 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white text-sm font-bold rounded-full flex items-center justify-center mr-3">
+                            {player.position}
+                          </span>
+                          <div>
+                            <p className="font-semibold text-gray-800">{player.name}</p>
+                            <p className="text-sm text-gray-600">{player.stat}</p>
+                          </div>
                         </div>
+                        {player.position === 1 && <span className="text-lg">👑</span>}
                       </div>
-                      {player.position === 1 && <span className="text-lg">👑</span>}
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+                    ))}
+                  </div>
+                  
+                  <div className="mt-4 text-center">
+                    <span className="text-sm text-gray-500 hover:text-gray-700">Click to view full leaderboard →</span>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
           ))}
         </div>
       </div>
