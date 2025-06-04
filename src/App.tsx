@@ -9,6 +9,7 @@ import Basketball from "./pages/Basketball";
 import Cricket from "./pages/Cricket";
 import Football from "./pages/Football";
 import Badminton from "./pages/Badminton";
+import RealTimeTracker from "./pages/RealTimeTracker";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -25,6 +26,7 @@ const App = () => (
           <Route path="/cricket" element={<Cricket />} />
           <Route path="/football" element={<Football />} />
           <Route path="/badminton" element={<Badminton />} />
+          <Route path="/live-tracker" element={<RealTimeTracker />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

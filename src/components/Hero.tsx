@@ -67,15 +67,27 @@ const Hero = () => {
           </Link>
         </div>
         
-        <Link to="/basketball">
-          <Button 
-            size="lg"
-            className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-8 py-4 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
-          >
-            <TrendingUp className="mr-2 h-5 w-5" />
-            View Leaderboards 🎯
-          </Button>
-        </Link>
+        <div className="flex gap-4 justify-center">
+          <Link to="/basketball">
+            <Button 
+              size="lg"
+              className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-8 py-4 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+            >
+              <TrendingUp className="mr-2 h-5 w-5" />
+              View Leaderboards 🎯
+            </Button>
+          </Link>
+          
+          <Link to="/live-tracker">
+            <Button 
+              size="lg"
+              variant="outline"
+              className="bg-white/10 border-white/20 text-white hover:bg-white/20 px-8 py-4 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+            >
+              Live Tracker ⚡
+            </Button>
+          </Link>
+        </div>
       </div>
     </section>
   );
