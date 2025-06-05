@@ -96,6 +96,7 @@ const RealTimeSportsTracker = () => {
       const { error } = await supabase
         .from('games')
         .insert({
+          sport: 'basketball',
           team_a_name: newGame.teamA.trim(),
           team_b_name: newGame.teamB.trim(),
         });

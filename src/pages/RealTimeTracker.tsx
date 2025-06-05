@@ -1,7 +1,7 @@
-import RealTimeSportsTracker from "@/components/RealTimeSportsTracker";
+import SportsTracker from "@/components/sports/SportsTracker";
 
 const RealTimeTracker = () => {
-  return <RealTimeSportsTracker />;
+  return <SportsTracker />;
 };
 
 export default RealTimeTracker;

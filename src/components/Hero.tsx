@@ -48,14 +48,14 @@ const Hero = () => {
         </div>
         
         <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-          Welcome back!
+          Welcome to
           <br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-orange-400">
-            Campus Sports.
+            SNU Sports Hub
           </span>
           <br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-yellow-400">
-            Tracked Live.
+            Live Tracking
           </span>
         </h1>
         

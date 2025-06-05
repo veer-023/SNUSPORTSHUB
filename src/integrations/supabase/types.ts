@@ -11,33 +11,90 @@ export type Database = {
     Tables: {
       games: {
         Row: {
+          clock_running: boolean | null
           created_at: string
+          current_half: number | null
+          current_overs: number | null
+          current_quarter: number | null
+          current_set: number | null
+          game_clock_minutes: number | null
+          game_clock_seconds: number | null
           id: string
+          live_updates: boolean | null
+          shot_clock_running: boolean | null
+          shot_clock_seconds: number | null
+          sport: string
           status: string
+          team_a_batsman_outs: number | null
+          team_a_fouls: number | null
+          team_a_games_current_set: number | null
           team_a_name: string
           team_a_score: number
+          team_a_sets: number | null
+          team_b_batsman_outs: number | null
+          team_b_fouls: number | null
+          team_b_games_current_set: number | null
           team_b_name: string
           team_b_score: number
+          team_b_sets: number | null
           updated_at: string
         }
         Insert: {
+          clock_running?: boolean | null
           created_at?: string
+          current_half?: number | null
+          current_overs?: number | null
+          current_quarter?: number | null
+          current_set?: number | null
+          game_clock_minutes?: number | null
+          game_clock_seconds?: number | null
           id?: string
+          live_updates?: boolean | null
+          shot_clock_running?: boolean | null
+          shot_clock_seconds?: number | null
+          sport: string
           status?: string
+          team_a_batsman_outs?: number | null
+          team_a_fouls?: number | null
+          team_a_games_current_set?: number | null
           team_a_name: string
           team_a_score?: number
+          team_a_sets?: number | null
+          team_b_batsman_outs?: number | null
+          team_b_fouls?: number | null
+          team_b_games_current_set?: number | null
           team_b_name: string
           team_b_score?: number
+          team_b_sets?: number | null
           updated_at?: string
         }
         Update: {
+          clock_running?: boolean | null
           created_at?: string
+          current_half?: number | null
+          current_overs?: number | null
+          current_quarter?: number | null
+          current_set?: number | null
+          game_clock_minutes?: number | null
+          game_clock_seconds?: number | null
           id?: string
+          live_updates?: boolean | null
+          shot_clock_running?: boolean | null
+          shot_clock_seconds?: number | null
+          sport?: string
           status?: string
+          team_a_batsman_outs?: number | null
+          team_a_fouls?: number | null
+          team_a_games_current_set?: number | null
           team_a_name?: string
           team_a_score?: number
+          team_a_sets?: number | null
+          team_b_batsman_outs?: number | null
+          team_b_fouls?: number | null
+          team_b_games_current_set?: number | null
           team_b_name?: string
           team_b_score?: number
+          team_b_sets?: number | null
           updated_at?: string
         }
         Relationships: []
