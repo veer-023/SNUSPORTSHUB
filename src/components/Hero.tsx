@@ -1,12 +1,39 @@
 
 import { Button } from "@/components/ui/button";
-import { TrendingUp } from "lucide-react";
+import { TrendingUp, LogOut } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 
 const Hero = () => {
+  const { signOut, user } = useAuth();
+  const { toast } = useToast();
+
+  const handleSignOut = async () => {
+    const { error } = await signOut();
+    if (!error) {
+      toast({
+        title: "Signed out successfully",
+        description: "See you next time!",
+      });
+    }
+  };
+
   return (
     <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 text-white overflow-hidden">
       <div className="absolute inset-0 bg-black/20"></div>
+      
+      {/* Sign out button */}
+      <div className="absolute top-6 right-6 z-20">
+        <Button
+          onClick={handleSignOut}
+          variant="outline"
+          className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+        >
+          <LogOut className="mr-2 h-4 w-4" />
+          Sign Out
+        </Button>
+      </div>
       
       {/* Animated background elements */}
       <div className="absolute inset-0">
@@ -21,14 +48,14 @@ const Hero = () => {
         </div>
         
         <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-          Campus Sports.
+          Welcome back!
           <br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-orange-400">
-            Tracked.
+            Campus Sports.
           </span>
           <br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-yellow-400">
-            Celebrated.
+            Tracked Live.
           </span>
         </h1>
         
