@@ -81,11 +81,11 @@ export const CommonControls = ({ game, onUpdate }: CommonControlsProps) => {
   };
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-1 sm:gap-2 flex-wrap">
       {/* Live Indicator */}
       <Badge 
         variant={game.live_updates ? "default" : "secondary"}
-        className={`cursor-pointer ${game.live_updates ? 'bg-red-500 animate-pulse' : 'bg-gray-500'}`}
+        className={`cursor-pointer text-xs sm:text-sm ${game.live_updates ? 'bg-red-500 animate-pulse' : 'bg-gray-500'}`}
         onClick={toggleLiveUpdates}
       >
         {game.live_updates ? '🔴 LIVE' : '⏸️ OFFLINE'}
@@ -99,34 +99,34 @@ export const CommonControls = ({ game, onUpdate }: CommonControlsProps) => {
               onClick={() => updateStatus('paused')}
               size="sm"
               variant="outline"
-              className="flex items-center gap-1"
+              className="flex items-center gap-1 h-8 w-8 p-0 sm:h-9 sm:w-auto sm:px-3"
             >
-              <Pause className="w-4 h-4" />
+              <Pause className="w-3 h-3 sm:w-4 sm:h-4" />
             </Button>
             <Button
               onClick={() => updateStatus('break')}
               size="sm"
               variant="outline"
-              className="flex items-center gap-1"
+              className="flex items-center gap-1 h-8 w-8 p-0 sm:h-9 sm:w-auto sm:px-3"
             >
-              <Coffee className="w-4 h-4" />
+              <Coffee className="w-3 h-3 sm:w-4 sm:h-4" />
             </Button>
           </>
         ) : game.status === 'paused' ? (
           <Button
             onClick={() => updateStatus('active')}
             size="sm"
-            className="bg-green-600 hover:bg-green-700 text-white flex items-center gap-1"
+            className="bg-green-600 hover:bg-green-700 text-white flex items-center gap-1 h-8 w-8 p-0 sm:h-9 sm:w-auto sm:px-3"
           >
-            <Play className="w-4 h-4" />
+            <Play className="w-3 h-3 sm:w-4 sm:h-4" />
           </Button>
         ) : game.status === 'break' ? (
           <Button
             onClick={() => updateStatus('active')}
             size="sm"
-            className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-1"
+            className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-1 h-8 w-8 p-0 sm:h-9 sm:w-auto sm:px-3"
           >
-            <Play className="w-4 h-4" />
+            <Play className="w-3 h-3 sm:w-4 sm:h-4" />
           </Button>
         ) : null}
 
@@ -134,16 +134,16 @@ export const CommonControls = ({ game, onUpdate }: CommonControlsProps) => {
           onClick={() => updateStatus('finished')}
           size="sm"
           variant="outline"
-          className="flex items-center gap-1"
+          className="flex items-center gap-1 h-8 w-8 p-0 sm:h-9 sm:w-auto sm:px-3"
         >
-          <Square className="w-4 h-4" />
+          <Square className="w-3 h-3 sm:w-4 sm:h-4" />
         </Button>
       </div>
 
       {/* Shot Clock */}
-      <div className="flex items-center gap-1 bg-gray-100 rounded-lg px-2 py-1">
-        <Clock className="w-4 h-4" />
-        <span className="text-sm font-mono">{game.shot_clock_seconds}s</span>
+      <div className="flex items-center gap-1 bg-gray-100 rounded-lg px-1 sm:px-2 py-1">
+        <Clock className="w-3 h-3 sm:w-4 sm:h-4" />
+        <span className="text-xs sm:text-sm font-mono">{game.shot_clock_seconds}s</span>
         <Button
           onClick={toggleShotClock}
           size="sm"
@@ -168,27 +168,27 @@ export const CommonControls = ({ game, onUpdate }: CommonControlsProps) => {
           onClick={playBuzzer}
           size="sm"
           variant="outline"
-          className="flex items-center gap-1"
+          className="flex items-center gap-1 h-8 px-2 sm:h-9 sm:px-3"
         >
-          <Volume2 className="w-4 h-4" />
-          Buzzer
+          <Volume2 className="w-3 h-3 sm:w-4 sm:h-4" />
+          <span className="hidden sm:inline">Buzzer</span>
         </Button>
         <Button
           onClick={playWhistle}
           size="sm"
           variant="outline"
-          className="flex items-center gap-1"
+          className="flex items-center gap-1 h-8 px-2 sm:h-9 sm:px-3"
         >
-          <Volume2 className="w-4 h-4" />
-          Whistle
+          <Volume2 className="w-3 h-3 sm:w-4 sm:h-4" />
+          <span className="hidden sm:inline">Whistle</span>
         </Button>
       </div>
 
       {/* Edit Dialog */}
       <Dialog open={isEditMode} onOpenChange={setIsEditMode}>
         <DialogTrigger asChild>
-          <Button size="sm" variant="outline" className="flex items-center gap-1">
-            <Edit className="w-4 h-4" />
+          <Button size="sm" variant="outline" className="flex items-center gap-1 h-8 w-8 p-0 sm:h-9 sm:w-auto sm:px-3">
+            <Edit className="w-3 h-3 sm:w-4 sm:h-4" />
           </Button>
         </DialogTrigger>
         <DialogContent>
@@ -229,9 +229,9 @@ export const CommonControls = ({ game, onUpdate }: CommonControlsProps) => {
         onClick={resetGame}
         size="sm"
         variant="outline"
-        className="flex items-center gap-1 text-red-600 hover:text-red-700"
+        className="flex items-center gap-1 text-red-600 hover:text-red-700 h-8 w-8 p-0 sm:h-9 sm:w-auto sm:px-3"
       >
-        <RefreshCw className="w-4 h-4" />
+        <RefreshCw className="w-3 h-3 sm:w-4 sm:h-4" />
       </Button>
     </div>
   );

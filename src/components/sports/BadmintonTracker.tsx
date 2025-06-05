@@ -76,55 +76,55 @@ export const BadmintonTracker = ({ game, onUpdate }: BadmintonTrackerProps) => {
                 <Button
                   onClick={() => updateScore('a', 1)}
                   disabled={game.status !== 'active'}
-                  className="bg-white/20 hover:bg-white/30 text-white text-lg font-bold px-8 py-3"
+                  className="bg-white/20 hover:bg-white/30 text-white text-sm sm:text-lg font-bold px-4 sm:px-8 py-2 sm:py-3 w-full sm:w-auto"
                 >
                   +1 Point
                 </Button>
               </div>
               
               {/* Sets Control */}
-              <div className="flex gap-2 justify-center mb-2">
+              <div className="flex gap-1 sm:gap-2 justify-center mb-2 items-center">
                 <Button
                   onClick={() => updateSets('a', -1)}
                   disabled={game.status !== 'active'}
                   variant="outline"
                   size="sm"
-                  className="bg-white/10 border-white/30 text-white hover:bg-white/20"
+                  className="bg-white/10 border-white/30 text-white hover:bg-white/20 h-8 w-8 p-0"
                 >
-                  <Minus className="w-4 h-4" />
+                  <Minus className="w-3 h-3 sm:w-4 sm:h-4" />
                 </Button>
-                <span className="px-3 py-1 bg-white/20 rounded text-sm">Sets</span>
+                <span className="px-2 sm:px-3 py-1 bg-white/20 rounded text-xs sm:text-sm">Sets</span>
                 <Button
                   onClick={() => updateSets('a', 1)}
                   disabled={game.status !== 'active'}
                   variant="outline"
                   size="sm"
-                  className="bg-white/10 border-white/30 text-white hover:bg-white/20"
+                  className="bg-white/10 border-white/30 text-white hover:bg-white/20 h-8 w-8 p-0"
                 >
-                  <Plus className="w-4 h-4" />
+                  <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
                 </Button>
               </div>
               
               {/* Games Control */}
-              <div className="flex gap-2 justify-center">
+              <div className="flex gap-1 sm:gap-2 justify-center items-center">
                 <Button
                   onClick={() => updateCurrentSetGames('a', -1)}
                   disabled={game.status !== 'active'}
                   variant="outline"
                   size="sm"
-                  className="bg-white/10 border-white/30 text-white hover:bg-white/20"
+                  className="bg-white/10 border-white/30 text-white hover:bg-white/20 h-8 w-8 p-0"
                 >
-                  <Minus className="w-4 h-4" />
+                  <Minus className="w-3 h-3 sm:w-4 sm:h-4" />
                 </Button>
-                <span className="px-3 py-1 bg-white/20 rounded text-sm">Games</span>
+                <span className="px-2 sm:px-3 py-1 bg-white/20 rounded text-xs sm:text-sm">Games</span>
                 <Button
                   onClick={() => updateCurrentSetGames('a', 1)}
                   disabled={game.status !== 'active'}
                   variant="outline"
                   size="sm"
-                  className="bg-white/10 border-white/30 text-white hover:bg-white/20"
+                  className="bg-white/10 border-white/30 text-white hover:bg-white/20 h-8 w-8 p-0"
                 >
-                  <Plus className="w-4 h-4" />
+                  <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
                 </Button>
               </div>
             </div>
@@ -143,55 +143,55 @@ export const BadmintonTracker = ({ game, onUpdate }: BadmintonTrackerProps) => {
                 <Button
                   onClick={() => updateScore('b', 1)}
                   disabled={game.status !== 'active'}
-                  className="bg-white/20 hover:bg-white/30 text-white text-lg font-bold px-8 py-3"
+                  className="bg-white/20 hover:bg-white/30 text-white text-sm sm:text-lg font-bold px-4 sm:px-8 py-2 sm:py-3 w-full sm:w-auto"
                 >
                   +1 Point
                 </Button>
               </div>
               
               {/* Sets Control */}
-              <div className="flex gap-2 justify-center mb-2">
+              <div className="flex gap-1 sm:gap-2 justify-center mb-2 items-center">
                 <Button
                   onClick={() => updateSets('b', -1)}
                   disabled={game.status !== 'active'}
                   variant="outline"
                   size="sm"
-                  className="bg-white/10 border-white/30 text-white hover:bg-white/20"
+                  className="bg-white/10 border-white/30 text-white hover:bg-white/20 h-8 w-8 p-0"
                 >
-                  <Minus className="w-4 h-4" />
+                  <Minus className="w-3 h-3 sm:w-4 sm:h-4" />
                 </Button>
-                <span className="px-3 py-1 bg-white/20 rounded text-sm">Sets</span>
+                <span className="px-2 sm:px-3 py-1 bg-white/20 rounded text-xs sm:text-sm">Sets</span>
                 <Button
                   onClick={() => updateSets('b', 1)}
                   disabled={game.status !== 'active'}
                   variant="outline"
                   size="sm"
-                  className="bg-white/10 border-white/30 text-white hover:bg-white/20"
+                  className="bg-white/10 border-white/30 text-white hover:bg-white/20 h-8 w-8 p-0"
                 >
-                  <Plus className="w-4 h-4" />
+                  <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
                 </Button>
               </div>
               
               {/* Games Control */}
-              <div className="flex gap-2 justify-center">
+              <div className="flex gap-1 sm:gap-2 justify-center items-center">
                 <Button
                   onClick={() => updateCurrentSetGames('b', -1)}
                   disabled={game.status !== 'active'}
                   variant="outline"
                   size="sm"
-                  className="bg-white/10 border-white/30 text-white hover:bg-white/20"
+                  className="bg-white/10 border-white/30 text-white hover:bg-white/20 h-8 w-8 p-0"
                 >
-                  <Minus className="w-4 h-4" />
+                  <Minus className="w-3 h-3 sm:w-4 sm:h-4" />
                 </Button>
-                <span className="px-3 py-1 bg-white/20 rounded text-sm">Games</span>
+                <span className="px-2 sm:px-3 py-1 bg-white/20 rounded text-xs sm:text-sm">Games</span>
                 <Button
                   onClick={() => updateCurrentSetGames('b', 1)}
                   disabled={game.status !== 'active'}
                   variant="outline"
                   size="sm"
-                  className="bg-white/10 border-white/30 text-white hover:bg-white/20"
+                  className="bg-white/10 border-white/30 text-white hover:bg-white/20 h-8 w-8 p-0"
                 >
-                  <Plus className="w-4 h-4" />
+                  <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
                 </Button>
               </div>
             </div>

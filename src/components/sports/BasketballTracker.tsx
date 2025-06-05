@@ -123,50 +123,50 @@ export const BasketballTracker = ({ game, onUpdate }: BasketballTrackerProps) =>
               <div className="text-lg mb-4">Fouls: {game.team_a_fouls || 0}</div>
               
               {/* Score Buttons */}
-              <div className="grid grid-cols-3 gap-2 mb-4">
+              <div className="grid grid-cols-3 gap-1 sm:gap-2 mb-4">
                 <Button
                   onClick={() => updateScore('a', 1)}
                   disabled={game.status !== 'active'}
-                  className="bg-white/20 hover:bg-white/30 text-white text-lg font-bold"
+                  className="bg-white/20 hover:bg-white/30 text-white text-sm sm:text-lg font-bold py-2 px-2 sm:px-4"
                 >
                   +1
                 </Button>
                 <Button
                   onClick={() => updateScore('a', 2)}
                   disabled={game.status !== 'active'}
-                  className="bg-white/20 hover:bg-white/30 text-white text-lg font-bold"
+                  className="bg-white/20 hover:bg-white/30 text-white text-sm sm:text-lg font-bold py-2 px-2 sm:px-4"
                 >
                   +2
                 </Button>
                 <Button
                   onClick={() => updateScore('a', 3)}
                   disabled={game.status !== 'active'}
-                  className="bg-white/20 hover:bg-white/30 text-white text-lg font-bold"
+                  className="bg-white/20 hover:bg-white/30 text-white text-sm sm:text-lg font-bold py-2 px-2 sm:px-4"
                 >
                   +3
                 </Button>
               </div>
               
               {/* Foul Controls */}
-              <div className="flex gap-2 justify-center">
+              <div className="flex gap-1 sm:gap-2 justify-center items-center">
                 <Button
                   onClick={() => updateFouls('a', -1)}
                   disabled={game.status !== 'active'}
                   variant="outline"
                   size="sm"
-                  className="bg-white/10 border-white/30 text-white hover:bg-white/20"
+                  className="bg-white/10 border-white/30 text-white hover:bg-white/20 h-8 w-8 p-0"
                 >
-                  <Minus className="w-4 h-4" />
+                  <Minus className="w-3 h-3 sm:w-4 sm:h-4" />
                 </Button>
-                <span className="px-3 py-1 bg-white/20 rounded text-sm">Fouls</span>
+                <span className="px-2 sm:px-3 py-1 bg-white/20 rounded text-xs sm:text-sm">Fouls</span>
                 <Button
                   onClick={() => updateFouls('a', 1)}
                   disabled={game.status !== 'active'}
                   variant="outline"
                   size="sm"
-                  className="bg-white/10 border-white/30 text-white hover:bg-white/20"
+                  className="bg-white/10 border-white/30 text-white hover:bg-white/20 h-8 w-8 p-0"
                 >
-                  <Plus className="w-4 h-4" />
+                  <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
                 </Button>
               </div>
             </div>
@@ -178,50 +178,50 @@ export const BasketballTracker = ({ game, onUpdate }: BasketballTrackerProps) =>
               <div className="text-lg mb-4">Fouls: {game.team_b_fouls || 0}</div>
               
               {/* Score Buttons */}
-              <div className="grid grid-cols-3 gap-2 mb-4">
+              <div className="grid grid-cols-3 gap-1 sm:gap-2 mb-4">
                 <Button
                   onClick={() => updateScore('b', 1)}
                   disabled={game.status !== 'active'}
-                  className="bg-white/20 hover:bg-white/30 text-white text-lg font-bold"
+                  className="bg-white/20 hover:bg-white/30 text-white text-sm sm:text-lg font-bold py-2 px-2 sm:px-4"
                 >
                   +1
                 </Button>
                 <Button
                   onClick={() => updateScore('b', 2)}
                   disabled={game.status !== 'active'}
-                  className="bg-white/20 hover:bg-white/30 text-white text-lg font-bold"
+                  className="bg-white/20 hover:bg-white/30 text-white text-sm sm:text-lg font-bold py-2 px-2 sm:px-4"
                 >
                   +2
                 </Button>
                 <Button
                   onClick={() => updateScore('b', 3)}
                   disabled={game.status !== 'active'}
-                  className="bg-white/20 hover:bg-white/30 text-white text-lg font-bold"
+                  className="bg-white/20 hover:bg-white/30 text-white text-sm sm:text-lg font-bold py-2 px-2 sm:px-4"
                 >
                   +3
                 </Button>
               </div>
               
               {/* Foul Controls */}
-              <div className="flex gap-2 justify-center">
+              <div className="flex gap-1 sm:gap-2 justify-center items-center">
                 <Button
                   onClick={() => updateFouls('b', -1)}
                   disabled={game.status !== 'active'}
                   variant="outline"
                   size="sm"
-                  className="bg-white/10 border-white/30 text-white hover:bg-white/20"
+                  className="bg-white/10 border-white/30 text-white hover:bg-white/20 h-8 w-8 p-0"
                 >
-                  <Minus className="w-4 h-4" />
+                  <Minus className="w-3 h-3 sm:w-4 sm:h-4" />
                 </Button>
-                <span className="px-3 py-1 bg-white/20 rounded text-sm">Fouls</span>
+                <span className="px-2 sm:px-3 py-1 bg-white/20 rounded text-xs sm:text-sm">Fouls</span>
                 <Button
                   onClick={() => updateFouls('b', 1)}
                   disabled={game.status !== 'active'}
                   variant="outline"
                   size="sm"
-                  className="bg-white/10 border-white/30 text-white hover:bg-white/20"
+                  className="bg-white/10 border-white/30 text-white hover:bg-white/20 h-8 w-8 p-0"
                 >
-                  <Plus className="w-4 h-4" />
+                  <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
                 </Button>
               </div>
             </div>
