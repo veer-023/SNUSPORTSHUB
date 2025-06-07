@@ -6,7 +6,7 @@ const Footer = () => {
         <div className="grid md:grid-cols-4 gap-8">
           <div className="md:col-span-2">
             <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-green-400 bg-clip-text text-transparent">
-              PlayPulse
+              SNU Sports Hub
             </h3>
             <p className="text-gray-400 mb-4">
               Tracking campus athletic excellence, one stat at a time. Join the movement and celebrate sports on your campus! 🏆
@@ -42,7 +42,7 @@ const Footer = () => {
         
         <div className="border-t border-gray-800 mt-8 pt-8 text-center">
           <p className="text-gray-400">
-            © 2024 PlayPulse. Powered by{" "}
+            © 2024 SNU Sports Hub. Powered by{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-green-400 font-semibold">
               Shiv Nadar Venture Lab
             </span>
