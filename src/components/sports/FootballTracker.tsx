@@ -17,6 +17,8 @@ interface Game {
   current_half?: number;
   team_a_fouls?: number;
   team_b_fouls?: number;
+  team_a_red_cards?: number;
+  team_b_red_cards?: number;
   status: string;
 }
 
@@ -83,12 +85,19 @@ export const FootballTracker = ({ game, onUpdate }: FootballTrackerProps) => {
     onUpdate(game.id, { [field]: newFouls });
   };
 
+  const updateRedCards = (team: 'a' | 'b', increment: number) => {
+    const field = team === 'a' ? 'team_a_red_cards' : 'team_b_red_cards';
+    const currentCards = team === 'a' ? (game.team_a_red_cards || 0) : (game.team_b_red_cards || 0);
+    const newCards = Math.max(0, currentCards + increment);
+    onUpdate(game.id, { [field]: newCards });
+  };
+
   const toggleClock = () => {
     onUpdate(game.id, { clock_running: !game.clock_running });
   };
 
   const updateHalf = (increment: number) => {
-    const newHalf = Math.max(1, Math.min(2, (game.current_half || 1) + increment));
+    const newHalf = Math.max(1, Math.min(6, (game.current_half || 1) + increment));
     onUpdate(game.id, { current_half: newHalf });
   };
 
@@ -120,40 +129,73 @@ export const FootballTracker = ({ game, onUpdate }: FootballTrackerProps) => {
             <div className="text-center">
               <h2 className="text-2xl font-bold mb-4">{game.team_a_name}</h2>
               <div className="text-6xl font-bold mb-4">{game.team_a_score}</div>
-              <div className="text-lg mb-4">Fouls: {game.team_a_fouls || 0}</div>
+              <div className="space-y-1 mb-4 text-sm">
+                <div>Fouls: {game.team_a_fouls || 0}</div>
+                <div className="text-red-300">Red Cards: {game.team_a_red_cards || 0}</div>
+              </div>
               
               {/* Score Buttons */}
-              <div className="mb-4">
+              <div className="grid grid-cols-2 gap-2 mb-4">
                 <Button
                   onClick={() => updateScore('a', 1)}
                   disabled={game.status !== 'active'}
-                  className="bg-white/20 hover:bg-white/30 text-white text-sm sm:text-lg font-bold px-4 sm:px-8 py-2 sm:py-3 w-full sm:w-auto"
+                  className="bg-white/20 hover:bg-white/30 text-white font-bold py-2"
                 >
-                  ⚽ GOAL +1
+                  ⚽ +1
+                </Button>
+                <Button
+                  onClick={() => updateScore('a', -1)}
+                  disabled={game.status !== 'active'}
+                  className="bg-red-500/30 hover:bg-red-500/50 text-white font-bold py-2"
+                >
+                  -1
                 </Button>
               </div>
               
-              {/* Foul Controls */}
-              <div className="flex gap-1 sm:gap-2 justify-center items-center">
-                <Button
-                  onClick={() => updateFouls('a', -1)}
-                  disabled={game.status !== 'active'}
-                  variant="outline"
-                  size="sm"
-                  className="bg-white/10 border-white/30 text-white hover:bg-white/20 h-8 w-8 p-0"
-                >
-                  <Minus className="w-3 h-3 sm:w-4 sm:h-4" />
-                </Button>
-                <span className="px-2 sm:px-3 py-1 bg-white/20 rounded text-xs sm:text-sm">Fouls</span>
-                <Button
-                  onClick={() => updateFouls('a', 1)}
-                  disabled={game.status !== 'active'}
-                  variant="outline"
-                  size="sm"
-                  className="bg-white/10 border-white/30 text-white hover:bg-white/20 h-8 w-8 p-0"
-                >
-                  <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
-                </Button>
+              {/* Foul & Card Controls */}
+              <div className="space-y-2">
+                <div className="flex gap-2 justify-center items-center">
+                  <Button
+                    onClick={() => updateFouls('a', -1)}
+                    disabled={game.status !== 'active'}
+                    variant="outline"
+                    size="sm"
+                    className="bg-white/10 border-white/30 text-white hover:bg-white/20"
+                  >
+                    <Minus className="w-3 h-3" />
+                  </Button>
+                  <span className="px-3 py-1 bg-white/20 rounded text-xs">Fouls</span>
+                  <Button
+                    onClick={() => updateFouls('a', 1)}
+                    disabled={game.status !== 'active'}
+                    variant="outline"
+                    size="sm"
+                    className="bg-white/10 border-white/30 text-white hover:bg-white/20"
+                  >
+                    <Plus className="w-3 h-3" />
+                  </Button>
+                </div>
+                <div className="flex gap-2 justify-center items-center">
+                  <Button
+                    onClick={() => updateRedCards('a', -1)}
+                    disabled={game.status !== 'active'}
+                    variant="outline"
+                    size="sm"
+                    className="bg-red-500/20 border-red-300/30 text-white hover:bg-red-500/30"
+                  >
+                    <Minus className="w-3 h-3" />
+                  </Button>
+                  <span className="px-3 py-1 bg-red-500/20 rounded text-xs">Red Cards</span>
+                  <Button
+                    onClick={() => updateRedCards('a', 1)}
+                    disabled={game.status !== 'active'}
+                    variant="outline"
+                    size="sm"
+                    className="bg-red-500/20 border-red-300/30 text-white hover:bg-red-500/30"
+                  >
+                    <Plus className="w-3 h-3" />
+                  </Button>
+                </div>
               </div>
             </div>
 
@@ -161,40 +203,73 @@ export const FootballTracker = ({ game, onUpdate }: FootballTrackerProps) => {
             <div className="text-center">
               <h2 className="text-2xl font-bold mb-4">{game.team_b_name}</h2>
               <div className="text-6xl font-bold mb-4">{game.team_b_score}</div>
-              <div className="text-lg mb-4">Fouls: {game.team_b_fouls || 0}</div>
+              <div className="space-y-1 mb-4 text-sm">
+                <div>Fouls: {game.team_b_fouls || 0}</div>
+                <div className="text-red-300">Red Cards: {game.team_b_red_cards || 0}</div>
+              </div>
               
               {/* Score Buttons */}
-              <div className="mb-4">
+              <div className="grid grid-cols-2 gap-2 mb-4">
                 <Button
                   onClick={() => updateScore('b', 1)}
                   disabled={game.status !== 'active'}
-                  className="bg-white/20 hover:bg-white/30 text-white text-sm sm:text-lg font-bold px-4 sm:px-8 py-2 sm:py-3 w-full sm:w-auto"
+                  className="bg-white/20 hover:bg-white/30 text-white font-bold py-2"
                 >
-                  ⚽ GOAL +1
+                  ⚽ +1
+                </Button>
+                <Button
+                  onClick={() => updateScore('b', -1)}
+                  disabled={game.status !== 'active'}
+                  className="bg-red-500/30 hover:bg-red-500/50 text-white font-bold py-2"
+                >
+                  -1
                 </Button>
               </div>
               
-              {/* Foul Controls */}
-              <div className="flex gap-1 sm:gap-2 justify-center items-center">
-                <Button
-                  onClick={() => updateFouls('b', -1)}
-                  disabled={game.status !== 'active'}
-                  variant="outline"
-                  size="sm"
-                  className="bg-white/10 border-white/30 text-white hover:bg-white/20 h-8 w-8 p-0"
-                >
-                  <Minus className="w-3 h-3 sm:w-4 sm:h-4" />
-                </Button>
-                <span className="px-2 sm:px-3 py-1 bg-white/20 rounded text-xs sm:text-sm">Fouls</span>
-                <Button
-                  onClick={() => updateFouls('b', 1)}
-                  disabled={game.status !== 'active'}
-                  variant="outline"
-                  size="sm"
-                  className="bg-white/10 border-white/30 text-white hover:bg-white/20 h-8 w-8 p-0"
-                >
-                  <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
-                </Button>
+              {/* Foul & Card Controls */}
+              <div className="space-y-2">
+                <div className="flex gap-2 justify-center items-center">
+                  <Button
+                    onClick={() => updateRedCards('b', -1)}
+                    disabled={game.status !== 'active'}
+                    variant="outline"
+                    size="sm"
+                    className="bg-white/10 border-white/30 text-white hover:bg-white/20"
+                  >
+                    <Minus className="w-3 h-3" />
+                  </Button>
+                  <span className="px-3 py-1 bg-white/20 rounded text-xs">Fouls</span>
+                  <Button
+                    onClick={() => updateFouls('b', 1)}
+                    disabled={game.status !== 'active'}
+                    variant="outline"
+                    size="sm"
+                    className="bg-white/10 border-white/30 text-white hover:bg-white/20"
+                  >
+                    <Plus className="w-3 h-3" />
+                  </Button>
+                </div>
+                <div className="flex gap-2 justify-center items-center">
+                  <Button
+                    onClick={() => updateRedCards('b', -1)}
+                    disabled={game.status !== 'active'}
+                    variant="outline"
+                    size="sm"
+                    className="bg-red-500/20 border-red-300/30 text-white hover:bg-red-500/30"
+                  >
+                    <Minus className="w-3 h-3" />
+                  </Button>
+                  <span className="px-3 py-1 bg-red-500/20 rounded text-xs">Red Cards</span>
+                  <Button
+                    onClick={() => updateRedCards('b', 1)}
+                    disabled={game.status !== 'active'}
+                    variant="outline"
+                    size="sm"
+                    className="bg-red-500/20 border-red-300/30 text-white hover:bg-red-500/30"
+                  >
+                    <Plus className="w-3 h-3" />
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
@@ -217,7 +292,7 @@ export const FootballTracker = ({ game, onUpdate }: FootballTrackerProps) => {
               <Minus className="w-5 h-5" />
             </Button>
             <div className="text-3xl font-bold px-6 py-2 bg-blue-100 rounded-lg">
-              {game.current_half === 1 ? '1st Half' : '2nd Half'}
+              Half {game.current_half || 1}
             </div>
             <Button
               onClick={() => updateHalf(1)}
@@ -229,7 +304,7 @@ export const FootballTracker = ({ game, onUpdate }: FootballTrackerProps) => {
             </Button>
           </div>
           <p className="text-center text-sm text-gray-600 mt-2">
-            Current Half (1st or 2nd)
+            Current Half (1-6, editable)
           </p>
         </CardContent>
       </Card>
