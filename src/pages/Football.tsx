@@ -162,12 +162,13 @@ const Football = () => {
 
         {/* Submit Stats CTA */}
         <div className="text-center bg-gradient-to-r from-blue-500 to-blue-600 text-white p-8 rounded-xl">
-          <h3 className="text-2xl font-bold mb-4">Submit Your Football Stats! ⚽</h3>
-          <p className="mb-6 text-blue-100">Track goals, assists, and match performance</p>
-          <Button className="bg-white text-blue-600 hover:bg-blue-50 font-semibold">
-            <ExternalLink className="mr-2" size={20} />
-            Submit Stats via Google Form
-          </Button>
+          <h3 className="text-2xl font-bold mb-4">Score Big with Your Stats! ⚽</h3>
+          <p className="mb-6 text-blue-100">Register your goals, assists, and match performance today</p>
+          <Link to="/registration">
+            <Button className="bg-white text-blue-600 hover:bg-blue-50 font-semibold">
+              Submit Your Football Form
+            </Button>
+          </Link>
         </div>
       </div>
     </div>

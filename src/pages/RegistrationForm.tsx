@@ -1,6 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { User } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { User, ArrowLeft } from "lucide-react";
+import { Link } from "react-router-dom";
 
 // The import for Navigation has been removed to resolve an error.
 // A simple placeholder Navigation component is now defined below.
@@ -25,6 +27,16 @@ const RegistrationForm = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
       <Navigation />
+      
+      {/* Back Button */}
+      <div className="p-4">
+        <Link to="/">
+          <Button variant="outline" className="mb-4">
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to Home
+          </Button>
+        </Link>
+      </div>
       
       {/* Header Section - Kept for consistent UI */}
       <section className="py-12 px-4">

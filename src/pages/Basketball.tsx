@@ -262,21 +262,15 @@ const Basketball = () => {
         </Card>
 
         {/* Stat Submission CTA */}
-        <Card className="text-center shadow-lg">
-          <CardContent className="p-8">
-            <h3 className="text-2xl font-bold mb-4">Submit Your Stats 📊</h3>
-            <p className="text-gray-600 mb-6">
-              Got game stats to share? Help us keep the leaderboard updated!
-            </p>
-            <Button 
-              size="lg"
-              className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700"
-              onClick={() => window.open('https://forms.google.com/basketball-stats', '_blank')}
-            >
-              Submit Basketball Stats 🏀
+        <div className="text-center bg-gradient-to-r from-orange-500 to-orange-600 text-white p-8 rounded-xl">
+          <h3 className="text-2xl font-bold mb-4">Ready to Join the Action? 🏀</h3>
+          <p className="mb-6 text-orange-100">Submit your basketball performance and get recognized!</p>
+          <Link to="/registration">
+            <Button className="bg-white text-orange-600 hover:bg-orange-50 font-semibold">
+              Submit Your Basketball Form
             </Button>
-          </CardContent>
-        </Card>
+          </Link>
+        </div>
       </div>
     </div>
   );

@@ -22,25 +22,11 @@ const Home = () => {
       color: "bg-red-50 border-red-200 hover:bg-red-100"
     },
     {
-      title: "Performance Analytics",
-      description: "Analyze player statistics and team performance with detailed insights",
-      icon: "📊",
-      link: "/performance",
-      color: "bg-blue-50 border-blue-200 hover:bg-blue-100"
-    },
-    {
       title: "Register as Player",
       description: "Join the SNU Sports community and participate in tournaments",
       icon: "📝",
       link: "/registration",
       color: "bg-green-50 border-green-200 hover:bg-green-100"
-    },
-    {
-      title: "View Awards",
-      description: "Celebrate achievements and see player of the week awards",
-      icon: "🏆",
-      link: "/awards",
-      color: "bg-yellow-50 border-yellow-200 hover:bg-yellow-100"
     }
   ];
 
@@ -68,49 +54,19 @@ const Home = () => {
             Track live matches, analyze performance, and celebrate athletic excellence.
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Link to="/features">
+          <div className="flex justify-center">
+            <Link to="/registration">
               <Button 
                 size="lg"
                 className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-8 py-4 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
               >
-                <TrendingUp className="mr-2 h-5 w-5" />
-                Explore Features
-              </Button>
-            </Link>
-            
-            <Link to="/registration">
-              <Button 
-                size="lg"
-                variant="outline"
-                className="border-2 border-green-600 text-green-600 hover:bg-green-600 hover:text-white px-8 py-4 text-lg font-semibold rounded-full transition-all duration-300"
-              >
-                Join Community
+                Get Started
               </Button>
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Statistics Section */}
-      <section className="py-16 bg-white">
-        <div className="max-w-6xl mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">
-            Platform Statistics
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {stats.map((stat, index) => (
-              <Card key={index} className="text-center hover:shadow-lg transition-shadow duration-300">
-                <CardContent className="pt-6">
-                  <stat.icon className="w-8 h-8 mx-auto mb-3 text-blue-600" />
-                  <div className="text-3xl font-bold text-gray-800 mb-1">{stat.value}</div>
-                  <div className="text-sm text-gray-600">{stat.label}</div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* Quick Actions */}
       <section className="py-16 px-4">

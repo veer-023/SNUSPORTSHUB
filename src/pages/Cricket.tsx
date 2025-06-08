@@ -162,12 +162,13 @@ const Cricket = () => {
 
         {/* Submit Stats CTA */}
         <div className="text-center bg-gradient-to-r from-green-500 to-green-600 text-white p-8 rounded-xl">
-          <h3 className="text-2xl font-bold mb-4">Submit Your Cricket Stats! 📋</h3>
-          <p className="mb-6 text-green-100">Track your batting and bowling performance</p>
-          <Button className="bg-white text-green-600 hover:bg-green-50 font-semibold">
-            <ExternalLink className="mr-2" size={20} />
-            Submit Stats via Google Form
-          </Button>
+          <h3 className="text-2xl font-bold mb-4">Hit it Out of the Park! 🏏</h3>
+          <p className="mb-6 text-green-100">Register your runs, wickets, and bowling stats now</p>
+          <Link to="/registration">
+            <Button className="bg-white text-green-600 hover:bg-green-50 font-semibold">
+              Submit Your Cricket Form
+            </Button>
+          </Link>
         </div>
       </div>
     </div>

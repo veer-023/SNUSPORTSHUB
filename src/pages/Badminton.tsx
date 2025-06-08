@@ -162,12 +162,13 @@ const Badminton = () => {
 
         {/* Submit Stats CTA */}
         <div className="text-center bg-gradient-to-r from-purple-500 to-purple-600 text-white p-8 rounded-xl">
-          <h3 className="text-2xl font-bold mb-4">Submit Your Badminton Stats! 🏸</h3>
-          <p className="mb-6 text-purple-100">Track your wins, losses, and tournament results</p>
-          <Button className="bg-white text-purple-600 hover:bg-purple-50 font-semibold">
-            <ExternalLink className="mr-2" size={20} />
-            Submit Stats via Google Form
-          </Button>
+          <h3 className="text-2xl font-bold mb-4">Smash Your Way to Glory! 🏸</h3>
+          <p className="mb-6 text-purple-100">Register your wins, matches, and tournament achievements</p>
+          <Link to="/registration">
+            <Button className="bg-white text-purple-600 hover:bg-purple-50 font-semibold">
+              Submit Your Badminton Form
+            </Button>
+          </Link>
         </div>
       </div>
     </div>
