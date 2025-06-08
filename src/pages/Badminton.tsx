@@ -142,6 +142,24 @@ const Badminton = () => {
           </CardContent>
         </Card>
 
+        {/* Live Tracker CTA */}
+        <Card className="text-center shadow-lg mb-8">
+          <CardContent className="p-8">
+            <h3 className="text-2xl font-bold mb-4">Start Live Tracking 🔴</h3>
+            <p className="text-gray-600 mb-6">
+              Track your badminton matches in real-time with our live scorer!
+            </p>
+            <Link to="/live-tracker">
+              <Button 
+                size="lg"
+                className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700"
+              >
+                🏸 Start Live Tracker
+              </Button>
+            </Link>
+          </CardContent>
+        </Card>
+
         {/* Submit Stats CTA */}
         <div className="text-center bg-gradient-to-r from-purple-500 to-purple-600 text-white p-8 rounded-xl">
           <h3 className="text-2xl font-bold mb-4">Submit Your Badminton Stats! 🏸</h3>

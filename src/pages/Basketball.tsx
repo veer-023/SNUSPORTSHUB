@@ -243,6 +243,24 @@ const Basketball = () => {
           </CardContent>
         </Card>
 
+        {/* Live Tracker CTA */}
+        <Card className="text-center shadow-lg mb-8">
+          <CardContent className="p-8">
+            <h3 className="text-2xl font-bold mb-4">Start Live Tracking 🔴</h3>
+            <p className="text-gray-600 mb-6">
+              Track your basketball games in real-time with our live scorer!
+            </p>
+            <Link to="/live-tracker">
+              <Button 
+                size="lg"
+                className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 mr-4"
+              >
+                🏀 Start Live Tracker
+              </Button>
+            </Link>
+          </CardContent>
+        </Card>
+
         {/* Stat Submission CTA */}
         <Card className="text-center shadow-lg">
           <CardContent className="p-8">

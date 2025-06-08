@@ -200,7 +200,7 @@ const FeaturesPage = () => {
                 ))}
               </div>
               <div className="text-center mt-8">
-                <Link to="/basketball">
+                <Link to="/live-tracker">
                   <Button size="lg" className="bg-red-600 hover:bg-red-700">
                     <Play className="w-5 h-5 mr-2" />
                     Try Live Tracker
