@@ -90,7 +90,6 @@ export type Database = {
           clock_running: boolean | null
           created_at: string
           current_half: number | null
-          current_innings: number | null
           current_overs: number | null
           current_quarter: number | null
           current_set: number | null
@@ -102,20 +101,16 @@ export type Database = {
           shot_clock_seconds: number | null
           sport: string
           status: string
-          team_a_balls_faced: number | null
           team_a_batsman_outs: number | null
           team_a_fouls: number | null
           team_a_games_current_set: number | null
           team_a_name: string
-          team_a_red_cards: number | null
           team_a_score: number
           team_a_sets: number | null
-          team_b_balls_faced: number | null
           team_b_batsman_outs: number | null
           team_b_fouls: number | null
           team_b_games_current_set: number | null
           team_b_name: string
-          team_b_red_cards: number | null
           team_b_score: number
           team_b_sets: number | null
           updated_at: string
@@ -124,7 +119,6 @@ export type Database = {
           clock_running?: boolean | null
           created_at?: string
           current_half?: number | null
-          current_innings?: number | null
           current_overs?: number | null
           current_quarter?: number | null
           current_set?: number | null
@@ -136,20 +130,16 @@ export type Database = {
           shot_clock_seconds?: number | null
           sport: string
           status?: string
-          team_a_balls_faced?: number | null
           team_a_batsman_outs?: number | null
           team_a_fouls?: number | null
           team_a_games_current_set?: number | null
           team_a_name: string
-          team_a_red_cards?: number | null
           team_a_score?: number
           team_a_sets?: number | null
-          team_b_balls_faced?: number | null
           team_b_batsman_outs?: number | null
           team_b_fouls?: number | null
           team_b_games_current_set?: number | null
           team_b_name: string
-          team_b_red_cards?: number | null
           team_b_score?: number
           team_b_sets?: number | null
           updated_at?: string
@@ -158,7 +148,6 @@ export type Database = {
           clock_running?: boolean | null
           created_at?: string
           current_half?: number | null
-          current_innings?: number | null
           current_overs?: number | null
           current_quarter?: number | null
           current_set?: number | null
@@ -170,20 +159,16 @@ export type Database = {
           shot_clock_seconds?: number | null
           sport?: string
           status?: string
-          team_a_balls_faced?: number | null
           team_a_batsman_outs?: number | null
           team_a_fouls?: number | null
           team_a_games_current_set?: number | null
           team_a_name?: string
-          team_a_red_cards?: number | null
           team_a_score?: number
           team_a_sets?: number | null
-          team_b_balls_faced?: number | null
           team_b_batsman_outs?: number | null
           team_b_fouls?: number | null
           team_b_games_current_set?: number | null
           team_b_name?: string
-          team_b_red_cards?: number | null
           team_b_score?: number
           team_b_sets?: number | null
           updated_at?: string
