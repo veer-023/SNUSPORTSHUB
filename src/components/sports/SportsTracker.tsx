@@ -10,7 +10,6 @@ import { BasketballTracker } from "./BasketballTracker";
 import { FootballTracker } from "./FootballTracker";
 import { BadmintonTracker } from "./BadmintonTracker";
 import { CommonControls } from "./CommonControls";
-import { BasketballAudienceView, FootballAudienceView, CricketAudienceView } from "./AudienceViews";
 import { ArrowLeft, Plus } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -47,7 +46,6 @@ interface Game {
 const SportsTracker = () => {
   const [games, setGames] = useState<Game[]>([]);
   const [selectedGame, setSelectedGame] = useState<Game | null>(null);
-  const [audienceMode, setAudienceMode] = useState(false);
   const [newGame, setNewGame] = useState({ 
     sport: 'basketball' as const, 
     teamA: "", 
@@ -187,31 +185,6 @@ const SportsTracker = () => {
   }
 
   if (selectedGame) {
-    // Audience View Mode
-    if (audienceMode) {
-      if (selectedGame.sport === 'basketball') {
-        return <BasketballAudienceView game={selectedGame} onBackToOperator={() => setAudienceMode(false)} />;
-      }
-      if (selectedGame.sport === 'football') {
-        return <FootballAudienceView game={selectedGame} onBackToOperator={() => setAudienceMode(false)} />;
-      }
-      if (selectedGame.sport === 'cricket') {
-        return <CricketAudienceView game={selectedGame} onBackToOperator={() => setAudienceMode(false)} />;
-      }
-      // Fallback for other sports
-      return (
-        <div className="min-h-screen bg-black text-white flex items-center justify-center">
-          <div className="text-center">
-            <h1 className="text-4xl font-bold mb-4">Audience View Coming Soon</h1>
-            <Button onClick={() => setAudienceMode(false)} variant="outline" className="text-white border-white">
-              Back to Operator View
-            </Button>
-          </div>
-        </div>
-      );
-    }
-
-    // Operator View Mode
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100">
         <div className="sticky top-0 z-50 bg-white/80 backdrop-blur-sm border-b">
@@ -230,16 +203,7 @@ const SportsTracker = () => {
                 {selectedGame.sport.toUpperCase()} LIVE
               </Badge>
             </div>
-            <div className="flex items-center gap-2">
-              <Button
-                onClick={() => setAudienceMode(true)}
-                variant="outline"
-                className="bg-blue-600 text-white border-blue-600 hover:bg-blue-700"
-              >
-                Audience View
-              </Button>
-              <CommonControls game={selectedGame} onUpdate={updateGame} />
-            </div>
+            <CommonControls game={selectedGame} onUpdate={updateGame} />
           </div>
         </div>
 
