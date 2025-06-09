@@ -18,6 +18,7 @@ import Cricket from "./pages/Cricket";
 import Football from "./pages/Football";
 import Badminton from "./pages/Badminton";
 import RealTimeTracker from "./pages/RealTimeTracker";
+import GameArchive from "./pages/GameArchive";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -84,6 +85,11 @@ const App = () => (
             <Route path="/live-tracker" element={
               <ProtectedRoute>
                 <RealTimeTracker />
+              </ProtectedRoute>
+            } />
+            <Route path="/game-archive" element={
+              <ProtectedRoute>
+                <GameArchive />
               </ProtectedRoute>
             } />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

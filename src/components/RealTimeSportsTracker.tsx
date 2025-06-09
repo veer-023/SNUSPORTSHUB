@@ -3,7 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Trophy, Users } from "lucide-react";
+import { Plus, Trophy, Users, Archive } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { BasketballTracker } from "./sports/BasketballTracker";
 import { FootballTracker } from "./sports/FootballTracker";
@@ -153,7 +154,16 @@ const RealTimeSportsTracker = () => {
             {winner && <WinnerPopup winner={winner} onClose={() => setWinner(null)} />}
             <div className="container mx-auto px-4 py-6 max-w-4xl">
                 <div className="text-center mb-8 pt-4">
-                    <h1 className="text-4xl font-bold text-gray-800 flex items-center justify-center gap-2"> <Trophy /> Sports Tracker</h1>
+                    <div className="flex justify-between items-center mb-4">
+                        <div></div>
+                        <h1 className="text-4xl font-bold text-gray-800 flex items-center gap-2"> <Trophy /> Sports Tracker</h1>
+                        <Link to="/game-archive">
+                            <Button variant="outline" className="flex items-center gap-2">
+                                <Archive className="w-4 h-4" />
+                                Archive
+                            </Button>
+                        </Link>
+                    </div>
                 </div>
                 <Card className="mb-8 shadow-xl">
                     <CardHeader><CardTitle className="flex items-center text-xl"><Plus /> Create New Game</CardTitle></CardHeader>
