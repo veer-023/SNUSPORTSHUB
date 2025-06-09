@@ -54,14 +54,34 @@ export const CricketTracker = ({ game, onUpdate }: CricketTrackerProps) => {
 
     if (addBall) {
       const currentBalls = team === 'a' ? (game.team_a_balls_faced || 0) : (game.team_b_balls_faced || 0);
-      updates[ballsField] = currentBalls + 1;
+      // For negative scores, deduct ball instead of adding
+      const ballChange = increment < 0 ? -1 : 1;
+      updates[ballsField] = Math.max(0, currentBalls + ballChange);
       
       // Update overs
-      const newBalls = currentBalls + 1;
+      const newBalls = Math.max(0, currentBalls + ballChange);
       const overs = Math.floor(newBalls / 6);
       const ballsInOver = newBalls % 6;
       updates.current_overs = parseFloat(`${overs}.${ballsInOver}`);
     }
+
+    onUpdate(game.id, updates);
+  };
+
+  const addDotBall = () => {
+    const team = currentBattingTeam;
+    const ballsField = team === 'a' ? 'team_a_balls_faced' : 'team_b_balls_faced';
+    const currentBalls = team === 'a' ? (game.team_a_balls_faced || 0) : (game.team_b_balls_faced || 0);
+    
+    const updates: Partial<Game> = {
+      [ballsField]: currentBalls + 1
+    };
+    
+    // Update overs
+    const newBalls = currentBalls + 1;
+    const overs = Math.floor(newBalls / 6);
+    const ballsInOver = newBalls % 6;
+    updates.current_overs = parseFloat(`${overs}.${ballsInOver}`);
 
     onUpdate(game.id, updates);
   };
@@ -188,13 +208,15 @@ export const CricketTracker = ({ game, onUpdate }: CricketTrackerProps) => {
           <div className="grid grid-cols-2 gap-4 mb-6">
             <div className="space-y-3">
               <h3 className="text-lg font-semibold text-center">Runs</h3>
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-4 gap-2">
+                <Button onClick={() => addDotBall()} disabled={game.status !== 'active'} className="bg-gray-500/80 hover:bg-gray-600/80 font-bold">Dot</Button>
                 <Button onClick={() => updateScore(1)} disabled={game.status !== 'active'} className="bg-white/20 hover:bg-white/30 font-bold">+1</Button>
                 <Button onClick={() => updateScore(2)} disabled={game.status !== 'active'} className="bg-white/20 hover:bg-white/30 font-bold">+2</Button>
                 <Button onClick={() => updateScore(6)} disabled={game.status !== 'active'} className="bg-white/20 hover:bg-white/30 font-bold">+6</Button>
                 <Button onClick={() => updateScore(-1)} disabled={game.status !== 'active'} variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20">-1</Button>
                 <Button onClick={() => updateScore(-2)} disabled={game.status !== 'active'} variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20">-2</Button>
                 <Button onClick={() => updateScore(-6)} disabled={game.status !== 'active'} variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20">-6</Button>
+                <Button onClick={() => updateScore(4)} disabled={game.status !== 'active'} className="bg-white/20 hover:bg-white/30 font-bold">+4</Button>
               </div>
             </div>
 
