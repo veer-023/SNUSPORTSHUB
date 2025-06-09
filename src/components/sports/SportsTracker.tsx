@@ -212,7 +212,7 @@ const SportsTracker = () => {
             <CricketTracker game={selectedGame} onUpdate={updateGame} />
           )}
           {selectedGame.sport === 'basketball' && (
-            <BasketballTracker game={selectedGame} onUpdate={updateGame} />
+            <BasketballTracker game={selectedGame} onUpdate={updateGame} onViewAudience={() => {}} />
           )}
           {selectedGame.sport === 'football' && (
             <FootballTracker game={selectedGame} onUpdate={updateGame} />
