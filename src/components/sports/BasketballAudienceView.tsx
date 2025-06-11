@@ -1,76 +1,235 @@
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { useState, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
+
+interface Player {
+    id: string;
+    name: string;
+    number: string;
+    points: number;
+    rebounds: number;
+    assists: number;
+    steals: number;
+    blocks: number;
+    fouls: number;
+}
 
 interface Game {
-  id: string;
-  sport: string;
-  team_a_name: string;
-  team_b_name: string;
-  team_a_score: number;
-  team_b_score: number;
-  game_clock_minutes: number;
-  game_clock_seconds: number;
-  clock_running: boolean;
-  current_quarter?: number;
-  team_a_fouls?: number;
-  team_b_fouls?: number;
-  shot_clock_seconds?: number;
-  status: string;
+    id: string;
+    team_a_name: string;
+    team_b_name: string;
+    team_a_score: number;
+    team_b_score: number;
+    team_a_roster: Player[];
+    team_b_roster: Player[];
+    current_quarter: number;
+    game_clock_minutes: number;
+    game_clock_seconds: number;
+    clock_running: boolean;
+    shot_clock_seconds: number;
+    team_a_fouls: number;
+    team_b_fouls: number;
+    quarter_scores: {
+        q1: { a: number; b: number };
+        q2: { a: number; b: number };
+        q3: { a: number; b: number };
+        q4: { a: number; b: number };
+    };
 }
 
 interface BasketballAudienceViewProps {
-  game: Game;
-  onBack: () => void;
-  lastScorer?: any;
-  lastSubstitution?: any;
-  showTopScorerData?: any;
+    game: Game;
+    onBack: () => void;
+    lastScorer: { name: string; points: number; team: string } | null;
+    lastSubstitution: { playerIn: string; playerOut: string; team: string } | null;
+    showTopScorerData: { name: string; teamName: string; points: number } | null;
 }
 
-export const BasketballAudienceView = ({ game, onBack, lastScorer, lastSubstitution, showTopScorerData }: BasketballAudienceViewProps) => {
+export const BasketballAudienceView = ({
+    game,
+    onBack,
+    lastScorer,
+    lastSubstitution,
+    showTopScorerData
+}: BasketballAudienceViewProps) => {
+    const [showScorerPopup, setShowScorerPopup] = useState(false);
+    const [showSubPopup, setShowSubPopup] = useState(false);
+    const [showTopScorerPopup, setShowTopScorerPopup] = useState(false);
+
+    useEffect(() => {
+        if (lastScorer) {
+            setShowScorerPopup(true);
+            const timer = setTimeout(() => setShowScorerPopup(false), 2000);
+            return () => clearTimeout(timer);
+        }
+    }, [lastScorer]);
+
+    useEffect(() => {
+        if (lastSubstitution) {
+            setShowSubPopup(true);
+            const timer = setTimeout(() => setShowSubPopup(false), 2000);
+            return () => clearTimeout(timer);
+        }
+    }, [lastSubstitution]);
+
+    useEffect(() => {
+        if (showTopScorerData) {
+            setShowTopScorerPopup(true);
+            const timer = setTimeout(() => setShowTopScorerPopup(false), 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [showTopScorerData]);
+
     return (
-        <div className="min-h-screen audience-view-bg text-white flex flex-col items-center justify-center p-4" style={{ fontFamily: "'Orbitron', sans-serif" }}>
-            <div className="relative z-10 w-full">
-                <Button onClick={onBack} variant="outline" className="absolute top-0 left-4 bg-gray-800/50 border-gray-600 text-white hover:bg-gray-700/70">
-                    ← Operator View
+        <div className="min-h-screen audience-view-bg">
+            <div className="relative z-10 container mx-auto px-4 py-6">
+                <Button onClick={onBack} className="mb-4">
+                    <ArrowLeft className="w-4 h-4 mr-2" /> Back to Games
                 </Button>
-                <Card className="w-full max-w-7xl bg-transparent border-0 text-white shadow-none">
-                    <CardHeader className="text-center border-b-2 border-orange-500/30 p-4">
-                        <div className="flex justify-between items-center">
-                            <Badge className="text-3xl sm:text-4xl font-bold bg-gray-800/50 border-gray-600 px-4 py-2">
-                                Q{game.current_quarter || 1}
-                            </Badge>
-                            <div className="flex flex-col items-center">
-                                <div className="text-lg text-gray-400">SHOT CLOCK</div>
-                                <div className="text-4xl sm:text-5xl font-mono bg-red-600/80 border-2 border-red-400 px-4 sm:px-6 py-2 rounded-lg shadow-lg text-glow-white">
-                                    {game.shot_clock_seconds}
-                                </div>
-                            </div>
-                        </div>
+
+                {/* Main Scoreboard */}
+                <Card className="bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-xl mb-6">
+                    <CardHeader>
+                        <CardTitle className="text-3xl font-bold text-center">🏀 BASKETBALL GAME</CardTitle>
                     </CardHeader>
-                    <CardContent className="py-8 sm:py-12 px-4">
-                        <div className="grid grid-cols-2 gap-4 mb-8">
+                    <CardContent>
+                        <div className="grid grid-cols-2 gap-8">
+                            {/* Team A */}
                             <div className="text-center">
-                                <h2 className="text-2xl sm:text-5xl font-extrabold tracking-tight uppercase mb-4">{game.team_a_name}</h2>
-                                <div className="text-6xl sm:text-8xl font-bold text-orange-400 text-glow-orange">{game.team_a_score}</div>
+                                <h2 className="text-2xl font-bold mb-4">{game.team_a_name}</h2>
+                                <div className="text-6xl font-bold mb-4">{game.team_a_score}</div>
                             </div>
+
+                            {/* Team B */}
                             <div className="text-center">
-                                <h2 className="text-2xl sm:text-5xl font-extrabold tracking-tight uppercase mb-4">{game.team_b_name}</h2>
-                                <div className="text-6xl sm:text-8xl font-bold text-orange-400 text-glow-orange">{game.team_b_score}</div>
+                                <h2 className="text-2xl font-bold mb-4">{game.team_b_name}</h2>
+                                <div className="text-6xl font-bold mb-4">{game.team_b_score}</div>
                             </div>
                         </div>
-                        <div className="text-center mb-8">
-                            <div className="text-5xl sm:text-7xl font-mono font-bold text-white text-glow-white">
-                                {String(game.game_clock_minutes).padStart(2, '0')}:{String(game.game_clock_seconds).padStart(2, '0')}
+
+                        {/* Game Clock */}
+                        <div className="text-center mt-4">
+                            <div className="text-4xl font-mono font-bold">
+                                Q{game.current_quarter} - {String(game.game_clock_minutes).padStart(2, '0')}:{String(game.game_clock_seconds).padStart(2, '0')}
                             </div>
-                        </div>
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className={`text-center text-lg sm:text-2xl font-semibold ${(game.team_a_fouls || 0) >= 4 ? 'foul-flag-red' : 'text-gray-400'}`}>Q FOULS: {game.team_a_fouls || 0}</div>
-                            <div className={`text-center text-lg sm:text-2xl font-semibold ${(game.team_b_fouls || 0) >= 4 ? 'foul-flag-red' : 'text-gray-400'}`}>Q FOULS: {game.team_b_fouls || 0}</div>
+                            {game.shot_clock_seconds > 0 && (
+                                <div className={`text-2xl font-bold mt-2 ${game.shot_clock_seconds <= 5 ? 'text-red-500' : ''}`}>
+                                    Shot Clock: {game.shot_clock_seconds}
+                                </div>
+                            )}
                         </div>
                     </CardContent>
                 </Card>
+
+                {/* Quarter Scores */}
+                <Card className="mb-6">
+                    <CardHeader>
+                        <CardTitle className="text-center">Quarter Scores</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="grid grid-cols-5 gap-4 text-center">
+                            <div className="font-bold">Quarter</div>
+                            <div className="font-bold">{game.team_a_name}</div>
+                            <div className="font-bold">-</div>
+                            <div className="font-bold">{game.team_b_name}</div>
+                            <div className="font-bold">Total</div>
+                            
+                            {[1, 2, 3, 4].map((q) => (
+                                <>
+                                    <div>Q{q}</div>
+                                    <div>{game.quarter_scores[`q${q}`].a}</div>
+                                    <div>-</div>
+                                    <div>{game.quarter_scores[`q${q}`].b}</div>
+                                    <div>{game.quarter_scores[`q${q}`].a + game.quarter_scores[`q${q}`].b}</div>
+                                </>
+                            ))}
+                        </div>
+                    </CardContent>
+                </Card>
+
+                {/* Team Stats */}
+                <div className="grid grid-cols-2 gap-6">
+                    {/* Team A Stats */}
+                    <Card>
+                        <CardHeader>
+                            <CardTitle className="text-center">{game.team_a_name} Stats</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="space-y-2">
+                                <div className="flex justify-between">
+                                    <span>Team Fouls:</span>
+                                    <span className="foul-flag-red">{game.team_a_fouls}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span>Top Scorer:</span>
+                                    <span>
+                                        {game.team_a_roster.reduce((max, player) => 
+                                            (player.points || 0) > (max.points || 0) ? player : max
+                                        , game.team_a_roster[0])?.name || 'N/A'}
+                                    </span>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    {/* Team B Stats */}
+                    <Card>
+                        <CardHeader>
+                            <CardTitle className="text-center">{game.team_b_name} Stats</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="space-y-2">
+                                <div className="flex justify-between">
+                                    <span>Team Fouls:</span>
+                                    <span className="foul-flag-red">{game.team_b_fouls}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span>Top Scorer:</span>
+                                    <span>
+                                        {game.team_b_roster.reduce((max, player) => 
+                                            (player.points || 0) > (max.points || 0) ? player : max
+                                        , game.team_b_roster[0])?.name || 'N/A'}
+                                    </span>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+
+                {/* Popups */}
+                {showScorerPopup && lastScorer && (
+                    <div className="fixed top-1/4 left-1/2 transform -translate-x-1/2 scorer-popup">
+                        <div className="bg-orange-500 text-white px-6 py-3 rounded-lg shadow-lg text-center">
+                            <div className="text-xl font-bold">{lastScorer.name}</div>
+                            <div className="text-2xl font-bold text-glow-white">+{lastScorer.points} Points!</div>
+                            <div className="text-sm">{lastScorer.team}</div>
+                        </div>
+                    </div>
+                )}
+
+                {showSubPopup && lastSubstitution && (
+                    <div className="fixed top-1/4 left-1/2 transform -translate-x-1/2 sub-popup">
+                        <div className="bg-blue-500 text-white px-6 py-3 rounded-lg shadow-lg text-center">
+                            <div className="text-xl font-bold">Substitution</div>
+                            <div className="text-lg">{lastSubstitution.playerIn} IN</div>
+                            <div className="text-lg">{lastSubstitution.playerOut} OUT</div>
+                            <div className="text-sm">{lastSubstitution.team}</div>
+                        </div>
+                    </div>
+                )}
+
+                {showTopScorerPopup && showTopScorerData && (
+                    <div className="fixed top-1/4 left-1/2 transform -translate-x-1/2 popup-animation">
+                        <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-8 py-4 rounded-lg shadow-lg text-center">
+                            <div className="text-2xl font-bold text-glow-orange">Top Scorer!</div>
+                            <div className="text-xl font-bold">{showTopScorerData.name}</div>
+                            <div className="text-3xl font-bold text-glow-white">{showTopScorerData.points} Points</div>
+                            <div className="text-sm">{showTopScorerData.teamName}</div>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );
-};
+}; 
