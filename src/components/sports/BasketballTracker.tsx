@@ -1,137 +1,155 @@
-import { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import { useState, useEffect, useCallback, useMemo } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, Minus, Play, Pause, Square, Users, Edit, Star } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Plus, Trophy } from "lucide-react";
+import { BasketballTracker } from "./sports/BasketballTracker";
+import { FootballTracker } from "./sports/FootballTracker";
+import { CricketTracker } from "./sports/CricketTracker";
+import { BadmintonTracker } from "./sports/BadmintonTracker";
+import { BasketballAudienceView } from "./sports/BasketballAudienceView";
+import { WinnerPopup } from "./WinnerPopup"; // Assuming you create this component
 
-interface Game {
-  id: string;
-  sport: string;
-  team_a_name: string;
-  team_b_name: string;
-  team_a_score: number;
-  team_b_score: number;
-  game_clock_minutes: number;
-  game_clock_seconds: number;
-  clock_running: boolean;
-  current_quarter?: number;
-  team_a_fouls?: number;
-  team_b_fouls?: number;
-  shot_clock_seconds?: number;
-  status: string;
-}
+const RealTimeSportsTracker = () => {
+    const [games, setGames] = useState([]);
+    const [newGame, setNewGame] = useState({ teamA: "", teamB: "", sport: "", showLeaderboard: false });
+    const [audienceGameId, setAudienceGameId] = useState(null);
+    const [winner, setWinner] = useState(null);
+    const [lastScorer, setLastScorer] = useState(null);
+    const [lastSubstitution, setLastSubstitution] = useState(null);
+    const [showAudienceTopScorer, setShowAudienceTopScorer] = useState(null);
 
-interface BasketballTrackerProps {
-  game: Game;
-  onUpdate: (gameId: string, updates: Partial<Game>) => void;
-  onViewAudience: (gameId: string) => void;
-  setLastScorer?: (data: any) => void;
-  setLastSubstitution?: (data: any) => void;
-  onShowTopScorer?: (gameId: string) => void;
-}
-
-export const BasketballTracker = ({ game, onUpdate, onViewAudience, setLastScorer, setLastSubstitution, onShowTopScorer }: BasketballTrackerProps) => {
-    const isPaused = game.status !== 'active';
-    const [isEditingTime, setIsEditingTime] = useState(false);
-    const [quarterTime, setQuarterTime] = useState(game.game_clock_minutes);
-
-    const updateScore = (team: 'a' | 'b', points: number) => {
-        if (isPaused) return;
-        const field = team === 'a' ? 'team_a_score' : 'team_b_score';
-        const currentScore = team === 'a' ? game.team_a_score : game.team_b_score;
-        onUpdate(game.id, { [field]: Math.max(0, currentScore + points) });
-        if (points > 0) onUpdate(game.id, { shot_clock_seconds: 24 });
+    const handleShowTopScorer = (gameId) => {
+        const game = games.find(g => g.id === gameId);
+        if (!game) return;
+        const allPlayers = [...(game.team_a_roster || []), ...(game.team_b_roster || [])];
+        if (allPlayers.length === 0) return;
+        const topScorer = allPlayers.reduce((max, player) => (player.points || 0) > (max.points || 0) ? player : max, allPlayers[0]);
+        
+        if (topScorer && topScorer.points > 0) {
+            const teamName = (game.team_a_roster || []).some(p => p.id === topScorer.id) ? game.team_a_name : game.team_b_name;
+            setShowAudienceTopScorer({
+                gameId,
+                name: topScorer.name,
+                teamName: teamName,
+                points: topScorer.points,
+                timestamp: Date.now() 
+            });
+        }
     };
 
-    const updateFouls = (team: 'a' | 'b', increment: number) => {
-        if (isPaused) return;
-        const field = team === 'a' ? 'team_a_fouls' : 'team_b_fouls';
-        onUpdate(game.id, { [field]: Math.max(0, (game[field] || 0) + increment) });
-    };
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setGames(prevGames => 
+                prevGames.map(game => {
+                    if (!game.clock_running || game.status !== 'active') {
+                        return game;
+                    }
+                    
+                    let newGame = {...game};
+                    let totalSeconds = newGame.game_clock_minutes * 60 + newGame.game_clock_seconds - 1;
+                    if (totalSeconds < 0) {
+                        newGame.clock_running = false;
+                        totalSeconds = 0;
+                        if(newGame.current_quarter === 4) { 
+                            newGame.status = 'finished';
+                            if(newGame.team_a_score > newGame.team_b_score) setWinner(newGame.team_a_name);
+                            else if (newGame.team_b_score > newGame.team_a_score) setWinner(newGame.team_b_name);
+                            else setWinner("It's a tie!");
+                        }
+                    }
+                    newGame.game_clock_minutes = Math.floor(totalSeconds / 60);
+                    newGame.game_clock_seconds = totalSeconds % 60;
+                    
+                    if (newGame.sport === 'basketball' && newGame.shot_clock_seconds > 0) {
+                        newGame.shot_clock_seconds -= 1;
+                    }
+                    return newGame;
+                })
+            );
+        }, 1000);
+        return () => clearInterval(timer);
+    }, []);
 
-    const updateQuarter = (increment: number) => {
-        const newQuarter = Math.max(1, Math.min(4, (game.current_quarter || 1) + increment));
-        onUpdate(game.id, { current_quarter: newQuarter, team_a_fouls: 0, team_b_fouls: 0 });
-    };
+    const createGame = useCallback(async () => {
+        if (!newGame.teamA.trim() || !newGame.teamB.trim() || !newGame.sport) { return; }
+        const tempId = `temp-${Date.now()}`;
+        const optimisticGame = {
+            id: tempId, sport: newGame.sport, team_a_name: newGame.teamA.trim(), team_b_name: newGame.teamB.trim(), team_a_score: 0, team_b_score: 0,
+            team_a_roster: [], team_b_roster: [], showLeaderboard: newGame.showLeaderboard,
+            game_clock_minutes: 12, game_clock_seconds: 0, clock_running: false,
+            quarter_length: 12,
+            current_quarter: 1, team_a_fouls: 0, team_b_fouls: 0, team_a_blocks: 0, team_b_blocks: 0, team_a_turnovers: 0, team_b_turnovers: 0, shot_clock_seconds: 24, status: 'active',
+            quarter_scores: {q1:{a:0, b:0}, q2:{a:0, b:0}, q3:{a:0, b:0}, q4:{a:0, b:0}}
+        };
+        setGames(prev => [optimisticGame, ...prev]);
+        setNewGame({ teamA: "", teamB: "", sport: "", showLeaderboard: false });
+    }, [newGame]);
 
-    const handleSetTime = () => {
-        const newTime = parseInt(quarterTime.toString(), 10);
-        if (newTime >= 1 && newTime <= 30) {
-            onUpdate(game.id, { game_clock_minutes: newTime, game_clock_seconds: 0 });
-            setIsEditingTime(false);
+    const updateGame = useCallback(async (gameId, updates) => {
+        setGames(prev => prev.map(game => game.id === gameId ? { ...game, ...updates } : game));
+    }, []);
+    
+    const audienceGame = games.find(g => g.id === audienceGameId);
+
+    if (audienceGame) {
+        return <BasketballAudienceView game={audienceGame} onBack={() => setAudienceGameId(null)} lastScorer={lastScorer} lastSubstitution={lastSubstitution} showTopScorerData={showAudienceTopScorer} />;
+    }
+    
+    const renderSportTracker = (game) => {
+        switch (game.sport) {
+        case 'basketball':
+            return <BasketballTracker game={game} onUpdate={updateGame} onViewAudience={setAudienceGameId} setLastScorer={setLastScorer} setLastSubstitution={setLastSubstitution} onShowTopScorer={handleShowTopScorer} />;
+        // Other cases remain the same
+        default: return null;
         }
     };
 
     return (
-        <Card className="mb-4 shadow-lg bg-gradient-to-br from-orange-500 to-red-500 text-white relative overflow-hidden">
-            <div className="absolute inset-0 bg-black/10"></div>
-             <div className="absolute -bottom-20 -right-20 w-48 h-48 opacity-10">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a10 10 0 0 0-10 10c0 4.42 2.866 8.23 6.839 9.54"></path><path d="M22 12a10 10 0 0 0-10-10c-4.42 0-8.23 2.866-9.54 6.839"></path><path d="M2 12h20"></path></svg>
-            </div>
-            <div className="relative z-10 p-4">
-                <div className="text-center space-y-2 mb-4">
-                    <h3 className="text-xl font-bold">🏀 BASKETBALL GAME</h3>
-                    <div className="flex justify-center items-center gap-4">
-                        <span className="font-semibold">Q{game.current_quarter || 1}/4</span>
-                        <span className="text-2xl font-mono">{String(game.game_clock_minutes).padStart(2, '0')}:{String(game.game_clock_seconds).padStart(2, '0')}</span>
-                        <Button variant="ghost" className="p-2 h-auto" onClick={() => onUpdate(game.id, { status: game.status === 'active' ? 'paused' : 'active', clock_running: game.status !== 'active' })}>
-                            {game.status === 'active' ? <Pause /> : <Play />}
-                        </Button>
-                    </div>
-                    <div className="flex justify-center items-center gap-4">
-                        <span className="font-semibold">Shot Clock: {game.shot_clock_seconds}</span>
-                        <Button size="sm" variant="outline" className="text-xs h-6 bg-white/20 border-white/50 text-white" onClick={() => onUpdate(game.id, { shot_clock_seconds: 24 })}>24s</Button>
-                        <Button size="sm" variant="outline" className="text-xs h-6 bg-white/20 border-white/50 text-white" onClick={() => onUpdate(game.id, { shot_clock_seconds: 14 })}>14s</Button>
-                    </div>
+        <div className="min-h-screen bg-gray-100">
+            {winner && <WinnerPopup winner={winner} onClose={() => setWinner(null)} />}
+            <div className="container mx-auto px-4 py-6 max-w-4xl">
+                <div className="text-center mb-8 pt-4">
+                    <h1 className="text-4xl font-bold text-gray-800 flex items-center justify-center gap-2"> <Trophy /> Sports Tracker</h1>
                 </div>
-
-                <div className="grid grid-cols-2 gap-4 text-center">
-                    <div>
-                        <h4 className="font-bold text-2xl">{game.team_a_name}</h4>
-                        <p className="text-6xl font-bold my-2">{game.team_a_score}</p>
-                        <p>Team Fouls: {game.team_a_fouls || 0}</p>
-                        <p className="text-xs">Foul Outs: 0</p>
-                        <div className="mt-4 space-x-1">
-                            <Button size="sm" className="bg-white/20" onClick={() => updateScore('a', 1)} disabled={isPaused}>+1</Button>
-                            <Button size="sm" className="bg-white/20" onClick={() => updateScore('a', 2)} disabled={isPaused}>+2</Button>
-                            <Button size="sm" className="bg-white/20" onClick={() => updateScore('a', 3)} disabled={isPaused}>+3</Button>
-                            <Button size="sm" className="bg-red-500/50" onClick={() => updateScore('a', -1)} disabled={isPaused}>-1</Button>
+                <Card className="mb-8 shadow-xl">
+                    <CardHeader><CardTitle className="flex items-center text-xl"><Plus /> Create New Game</CardTitle></CardHeader>
+                    <CardContent>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-end">
+                            <div>
+                                <label className="block text-sm font-medium mb-1">Sport</label>
+                                <Select value={newGame.sport} onValueChange={(value) => setNewGame(prev => ({ ...prev, sport: value }))}>
+                                    <option value="" disabled>Select sport</option>
+                                    <SelectItem value="basketball">🏀 Basketball</SelectItem>
+                                    <SelectItem value="football">⚽ Football</SelectItem>
+                                    <SelectItem value="cricket">🏏 Cricket</SelectItem>
+                                    <SelectItem value="badminton">🏸 Badminton</SelectItem>
+                                </Select>
+                            </div>
+                             {newGame.sport === 'basketball' && <div>
+                                <label className="block text-sm font-medium mb-1">Enable Live Stats?</label>
+                                <div className="flex gap-2">
+                                    <Button className={`w-full ${newGame.showLeaderboard ? 'bg-green-600' : 'bg-gray-300'}`} onClick={() => setNewGame(prev => ({...prev, showLeaderboard: true}))}>Yes</Button>
+                                    <Button className={`w-full ${!newGame.showLeaderboard ? 'bg-red-600' : 'bg-gray-300'}`} onClick={() => setNewGame(prev => ({...prev, showLeaderboard: false}))}>No</Button>
+                                </div>
+                            </div>}
+                            <div>
+                                <label className="block text-sm font-medium mb-1">Team A</label>
+                                <Input value={newGame.teamA} onChange={(e) => setNewGame(prev => ({ ...prev, teamA: e.target.value }))} placeholder="Team A"/>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium mb-1">Team B</label>
+                                <Input value={newGame.teamB} onChange={(e) => setNewGame(prev => ({ ...prev, teamB: e.target.value }))} placeholder="Team B"/>
+                            </div>
                         </div>
-                        <div className="mt-2 flex justify-center items-center gap-2">
-                            <Button size="sm" variant="outline" className="p-2 h-auto bg-white/20 border-white/50" onClick={() => updateFouls('a', -1)} disabled={isPaused}><Minus /></Button>
-                            <span>Fouls</span>
-                            <Button size="sm" variant="outline" className="p-2 h-auto bg-white/20 border-white/50" onClick={() => updateFouls('a', 1)} disabled={isPaused}><Plus /></Button>
-                        </div>
-                    </div>
-                    <div>
-                        <h4 className="font-bold text-2xl">{game.team_b_name}</h4>
-                        <p className="text-6xl font-bold my-2">{game.team_b_score}</p>
-                        <p>Team Fouls: {game.team_b_fouls || 0}</p>
-                        <p className="text-xs">Foul Outs: 0</p>
-                        <div className="mt-4 space-x-1">
-                            <Button size="sm" className="bg-white/20" onClick={() => updateScore('b', 1)} disabled={isPaused}>+1</Button>
-                            <Button size="sm" className="bg-white/20" onClick={() => updateScore('b', 2)} disabled={isPaused}>+2</Button>
-                            <Button size="sm" className="bg-white/20" onClick={() => updateScore('b', 3)} disabled={isPaused}>+3</Button>
-                            <Button size="sm" className="bg-red-500/50" onClick={() => updateScore('b', -1)} disabled={isPaused}>-1</Button>
-                        </div>
-                        <div className="mt-2 flex justify-center items-center gap-2">
-                            <Button size="sm" variant="outline" className="p-2 h-auto bg-white/20 border-white/50" onClick={() => updateFouls('b', -1)} disabled={isPaused}><Minus /></Button>
-                            <span>Fouls</span>
-                            <Button size="sm" variant="outline" className="p-2 h-auto bg-white/20 border-white/50" onClick={() => updateFouls('b', 1)} disabled={isPaused}><Plus /></Button>
-                        </div>
-                    </div>
-                </div>
-                <div className="flex justify-center items-center gap-2 mt-4">
-                    <Button variant="ghost" className="p-2 h-auto" onClick={() => updateQuarter(-1)}><Minus /></Button>
-                    <span className="font-semibold">Quarter {game.current_quarter}</span>
-                    <Button variant="ghost" className="p-2 h-auto" onClick={() => updateQuarter(1)}><Plus /></Button>
-                    {isEditingTime ? (<div className="flex items-center gap-2"><Input type="number" value={quarterTime} onChange={(e) => setQuarterTime(Number(e.target.value))} className="w-20 text-black" min="1" max="30" /><Button onClick={handleSetTime}>Set</Button></div>) : (<Button variant="ghost" size="sm" onClick={() => setIsEditingTime(true)}><Edit /></Button>)}
-                </div>
-                <div className="flex justify-center gap-4 mt-4">
-                    <Button onClick={() => onViewAudience(game.id)} variant="outline" className="bg-white/20 border-white/50">Audience View</Button>
-                    <Button onClick={() => onUpdate(game.id, { status: 'finished', clock_running: false })} variant="destructive"><Square /> End Game</Button>
+                         <Button onClick={createGame} disabled={!newGame.teamA.trim() || !newGame.teamB.trim() || !newGame.sport} className="w-full mt-4"><Plus /> Create Game</Button>
+                    </CardContent>
+                </Card>
+                <div className="space-y-6">
+                    {games.length === 0 ? <Card><p className="text-center text-gray-500 p-8">No games created yet.</p></Card> : games.map(game => <div key={game.id}>{renderSportTracker(game)}</div>) }
                 </div>
             </div>
-        </Card>
+        </div>
     );
 };
