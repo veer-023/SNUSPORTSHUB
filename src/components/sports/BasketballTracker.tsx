@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Play, Pause, Plus, Minus, Square, Edit } from "lucide-react";
+import { Plus, Minus, Play, Pause, Square, Users, Edit, Star } from "lucide-react";
 
 interface Game {
   id: string;
@@ -26,9 +25,12 @@ interface BasketballTrackerProps {
   game: Game;
   onUpdate: (gameId: string, updates: Partial<Game>) => void;
   onViewAudience: (gameId: string) => void;
+  setLastScorer?: (data: any) => void;
+  setLastSubstitution?: (data: any) => void;
+  onShowTopScorer?: (gameId: string) => void;
 }
 
-export const BasketballTracker = ({ game, onUpdate, onViewAudience }: BasketballTrackerProps) => {
+export const BasketballTracker = ({ game, onUpdate, onViewAudience, setLastScorer, setLastSubstitution, onShowTopScorer }: BasketballTrackerProps) => {
     const isPaused = game.status !== 'active';
     const [isEditingTime, setIsEditingTime] = useState(false);
     const [quarterTime, setQuarterTime] = useState(game.game_clock_minutes);

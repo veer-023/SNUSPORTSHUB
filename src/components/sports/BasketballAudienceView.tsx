@@ -22,9 +22,12 @@ interface Game {
 interface BasketballAudienceViewProps {
   game: Game;
   onBack: () => void;
+  lastScorer?: any;
+  lastSubstitution?: any;
+  showTopScorerData?: any;
 }
 
-export const BasketballAudienceView = ({ game, onBack }: BasketballAudienceViewProps) => {
+export const BasketballAudienceView = ({ game, onBack, lastScorer, lastSubstitution, showTopScorerData }: BasketballAudienceViewProps) => {
     return (
         <div className="min-h-screen audience-view-bg text-white flex flex-col items-center justify-center p-4" style={{ fontFamily: "'Orbitron', sans-serif" }}>
             <div className="relative z-10 w-full">

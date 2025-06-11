@@ -1,106 +1,68 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Plus, Trophy, Users, Archive } from "lucide-react";
-import { Link } from "react-router-dom";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Plus, Trophy, Archive } from "lucide-react";
+import { Link } from "react-router-dom";
 import { BasketballTracker } from "./sports/BasketballTracker";
 import { FootballTracker } from "./sports/FootballTracker";
 import { CricketTracker } from "./sports/CricketTracker";
 import { BadmintonTracker } from "./sports/BadmintonTracker";
-import { BasketballAudienceView } from "./sports/BasketballAudienceView"; // Import the new component
-
-// Define the WinnerPopup component here or import it
-const WinnerPopup = ({ winner, onClose }) => {
-    useEffect(() => {
-        const confettiContainer = document.getElementById('confetti-container');
-        if (confettiContainer) {
-            for (let i = 0; i < 50; i++) {
-                const confetti = document.createElement('div');
-                confetti.className = 'confetti';
-                confetti.style.left = Math.random() * 100 + 'vw';
-                confetti.style.animation = `confetti-fall ${1 + Math.random() * 2}s linear ${Math.random() * 2}s infinite`;
-                confetti.style.backgroundColor = ['#f00', '#0f0', '#00f', '#ff0', '#0ff', '#f0f'][Math.floor(Math.random() * 6)];
-                confettiContainer.appendChild(confetti);
-            }
-        }
-    }, []);
-    return (
-        <div id="confetti-container" className="modal">
-            <div className="modal-content">
-                <h2 className="text-3xl font-bold mb-4">🎉 WINNER! 🎉</h2>
-                <p className="text-2xl text-gray-800">{winner} has won the game!</p>
-                <Button onClick={onClose} className="mt-6">Close</Button>
-            </div>
-        </div>
-    )
-};
-
-interface Game {
-  id: string;
-  sport: string;
-  team_a_name: string;
-  team_b_name: string;
-  team_a_score: number;
-  team_b_score: number;
-  game_clock_minutes: number;
-  game_clock_seconds: number;
-  clock_running: boolean;
-  current_quarter?: number;
-  current_half?: number;
-  current_set?: number;
-  current_overs?: number;
-  team_a_fouls?: number;
-  team_b_fouls?: number;
-  shot_clock_seconds?: number;
-  team_a_red_cards?: number;
-  team_b_red_cards?: number;
-  team_a_batsman_outs?: number;
-  team_b_batsman_outs?: number;
-  team_a_sets?: number;
-  team_b_sets?: number;
-  team_a_games_current_set?: number;
-  team_b_games_current_set?: number;
-  status: string;
-  created_at: string;
-  updated_at: string;
-}
+import { BasketballAudienceView } from "./sports/BasketballAudienceView";
+import { WinnerPopup } from "./WinnerPopup";
 
 const RealTimeSportsTracker = () => {
-    const [games, setGames] = useState<Game[]>([]);
-    const [newGame, setNewGame] = useState({ teamA: "", teamB: "", sport: "" });
+    const [games, setGames] = useState([]);
+    const [newGame, setNewGame] = useState({ teamA: "", teamB: "", sport: "", showLeaderboard: false });
     const [audienceGameId, setAudienceGameId] = useState(null);
     const [winner, setWinner] = useState(null);
+    const [lastScorer, setLastScorer] = useState(null);
+    const [lastSubstitution, setLastSubstitution] = useState(null);
+    const [showAudienceTopScorer, setShowAudienceTopScorer] = useState(null);
 
-    // Centralized timer logic
+    const handleShowTopScorer = (gameId) => {
+        const game = games.find(g => g.id === gameId);
+        if (!game) return;
+        const allPlayers = [...(game.team_a_roster || []), ...(game.team_b_roster || [])];
+        if (allPlayers.length === 0) return;
+        const topScorer = allPlayers.reduce((max, player) => (player.points || 0) > (max.points || 0) ? player : max, allPlayers[0]);
+        
+        if (topScorer && topScorer.points > 0) {
+            const teamName = (game.team_a_roster || []).some(p => p.id === topScorer.id) ? game.team_a_name : game.team_b_name;
+            setShowAudienceTopScorer({
+                gameId,
+                name: topScorer.name,
+                teamName: teamName,
+                points: topScorer.points,
+                timestamp: Date.now() 
+            });
+        }
+    };
+
     useEffect(() => {
         const timer = setInterval(() => {
-            setGames(prevGames =>
+            setGames(prevGames => 
                 prevGames.map(game => {
                     if (!game.clock_running || game.status !== 'active') {
                         return game;
                     }
-
-                    let newGame = { ...game };
-
-                    // Game Clock
+                    
+                    let newGame = {...game};
                     let totalSeconds = newGame.game_clock_minutes * 60 + newGame.game_clock_seconds - 1;
                     if (totalSeconds < 0) {
                         newGame.clock_running = false;
                         totalSeconds = 0;
-                        if (newGame.current_quarter === 4) {
+                        if(newGame.current_quarter === 4) { 
                             newGame.status = 'finished';
-                            if (newGame.team_a_score > newGame.team_b_score) setWinner(newGame.team_a_name);
+                            if(newGame.team_a_score > newGame.team_b_score) setWinner(newGame.team_a_name);
                             else if (newGame.team_b_score > newGame.team_a_score) setWinner(newGame.team_b_name);
                             else setWinner("It's a tie!");
                         }
                     }
                     newGame.game_clock_minutes = Math.floor(totalSeconds / 60);
                     newGame.game_clock_seconds = totalSeconds % 60;
-
-                    // Shot Clock
+                    
                     if (newGame.sport === 'basketball' && newGame.shot_clock_seconds > 0) {
                         newGame.shot_clock_seconds -= 1;
                     }
@@ -114,38 +76,36 @@ const RealTimeSportsTracker = () => {
     const createGame = useCallback(async () => {
         if (!newGame.teamA.trim() || !newGame.teamB.trim() || !newGame.sport) { return; }
         const tempId = `temp-${Date.now()}`;
-        const optimisticGame: Game = {
+        const optimisticGame = {
             id: tempId, sport: newGame.sport, team_a_name: newGame.teamA.trim(), team_b_name: newGame.teamB.trim(), team_a_score: 0, team_b_score: 0,
-            game_clock_minutes: newGame.sport === 'basketball' || newGame.sport === 'football' ? 12 : 0, game_clock_seconds: 0, clock_running: false,
-            current_quarter: newGame.sport === 'basketball' ? 1 : undefined, team_a_fouls: 0, team_b_fouls: 0, shot_clock_seconds: 24, status: 'active',
-            team_a_batsman_outs: 0, team_b_batsman_outs: 0, team_a_sets: 0, team_b_sets: 0,
-            created_at: new Date().toISOString(), updated_at: new Date().toISOString(),
+            team_a_roster: [], team_b_roster: [], showLeaderboard: newGame.showLeaderboard,
+            game_clock_minutes: 12, game_clock_seconds: 0, clock_running: false,
+            quarter_length: 12,
+            current_quarter: 1, team_a_fouls: 0, team_b_fouls: 0, team_a_blocks: 0, team_b_blocks: 0, team_a_turnovers: 0, team_b_turnovers: 0, shot_clock_seconds: 24, status: 'active',
+            quarter_scores: {q1:{a:0, b:0}, q2:{a:0, b:0}, q3:{a:0, b:0}, q4:{a:0, b:0}}
         };
         setGames(prev => [optimisticGame, ...prev]);
-        setNewGame({ teamA: "", teamB: "", sport: "" });
-        await new Promise(resolve => setTimeout(resolve, 200));
-        const realId = `game-${Date.now()}`;
-        setGames(prev => prev.map(game => game.id === tempId ? { ...game, id: realId } : game));
+        setNewGame({ teamA: "", teamB: "", sport: "", showLeaderboard: false });
     }, [newGame]);
 
-    const updateGame = useCallback(async (gameId: string, updates: Partial<Game>) => {
+    const updateGame = useCallback(async (gameId, updates) => {
         setGames(prev => prev.map(game => game.id === gameId ? { ...game, ...updates } : game));
     }, []);
-
+    
     const audienceGame = games.find(g => g.id === audienceGameId);
 
     if (audienceGame) {
-        return <BasketballAudienceView game={audienceGame} onBack={() => setAudienceGameId(null)} />;
+        return <BasketballAudienceView game={audienceGame} onBack={() => setAudienceGameId(null)} lastScorer={lastScorer} lastSubstitution={lastSubstitution} showTopScorerData={showAudienceTopScorer} />;
     }
-
+    
     const renderSportTracker = (game) => {
         switch (game.sport) {
-            case 'basketball':
-                return <BasketballTracker game={game} onUpdate={updateGame} onViewAudience={setAudienceGameId} />;
-            case 'football': return <FootballTracker game={game} onUpdate={updateGame} />;
-            case 'cricket': return <CricketTracker game={game} onUpdate={updateGame} />;
-            case 'badminton': return <BadmintonTracker game={game} onUpdate={updateGame} />;
-            default: return null;
+        case 'basketball':
+            return <BasketballTracker game={game} onUpdate={updateGame} onViewAudience={setAudienceGameId} setLastScorer={setLastScorer} setLastSubstitution={setLastSubstitution} onShowTopScorer={handleShowTopScorer} />;
+        case 'football': return <FootballTracker game={game} onUpdate={updateGame} />;
+        case 'cricket': return <CricketTracker game={game} onUpdate={updateGame} />;
+        case 'badminton': return <BadmintonTracker game={game} onUpdate={updateGame} />;
+        default: return null;
         }
     };
 
@@ -168,7 +128,7 @@ const RealTimeSportsTracker = () => {
                 <Card className="mb-8 shadow-xl">
                     <CardHeader><CardTitle className="flex items-center text-xl"><Plus /> Create New Game</CardTitle></CardHeader>
                     <CardContent>
-                        <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 items-end">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-end">
                             <div>
                                 <label className="block text-sm font-medium mb-1">Sport</label>
                                 <Select value={newGame.sport} onValueChange={(value) => setNewGame(prev => ({ ...prev, sport: value }))}>
@@ -183,20 +143,27 @@ const RealTimeSportsTracker = () => {
                                     </SelectContent>
                                 </Select>
                             </div>
+                             {newGame.sport === 'basketball' && <div>
+                                <label className="block text-sm font-medium mb-1">Enable Live Stats?</label>
+                                <div className="flex gap-2">
+                                    <Button className={`w-full ${newGame.showLeaderboard ? 'bg-green-600' : 'bg-gray-300'}`} onClick={() => setNewGame(prev => ({...prev, showLeaderboard: true}))}>Yes</Button>
+                                    <Button className={`w-full ${!newGame.showLeaderboard ? 'bg-red-600' : 'bg-gray-300'}`} onClick={() => setNewGame(prev => ({...prev, showLeaderboard: false}))}>No</Button>
+                                </div>
+                            </div>}
                             <div>
                                 <label className="block text-sm font-medium mb-1">Team A</label>
-                                <Input value={newGame.teamA} onChange={(e) => setNewGame(prev => ({ ...prev, teamA: e.target.value }))} placeholder="Team A" />
+                                <Input value={newGame.teamA} onChange={(e) => setNewGame(prev => ({ ...prev, teamA: e.target.value }))} placeholder="Team A"/>
                             </div>
                             <div>
                                 <label className="block text-sm font-medium mb-1">Team B</label>
-                                <Input value={newGame.teamB} onChange={(e) => setNewGame(prev => ({ ...prev, teamB: e.target.value }))} placeholder="Team B" />
+                                <Input value={newGame.teamB} onChange={(e) => setNewGame(prev => ({ ...prev, teamB: e.target.value }))} placeholder="Team B"/>
                             </div>
-                            <Button onClick={createGame} disabled={!newGame.teamA.trim() || !newGame.teamB.trim() || !newGame.sport}><Plus /> Create</Button>
                         </div>
+                         <Button onClick={createGame} disabled={!newGame.teamA.trim() || !newGame.teamB.trim() || !newGame.sport} className="w-full mt-4"><Plus /> Create Game</Button>
                     </CardContent>
                 </Card>
                 <div className="space-y-6">
-                    {games.length === 0 ? <Card><p className="text-center text-gray-500 p-8">No games created yet.</p></Card> : games.map(game => <div key={game.id}>{renderSportTracker(game)}</div>)}
+                    {games.length === 0 ? <Card><p className="text-center text-gray-500 p-8">No games created yet.</p></Card> : games.map(game => <div key={game.id}>{renderSportTracker(game)}</div>) }
                 </div>
             </div>
         </div>

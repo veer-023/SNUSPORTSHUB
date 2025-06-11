@@ -106,11 +106,33 @@
     display: flex; justify-content: center; align-items: center; z-index: 100;
 }
 .modal-content {
-    background-color: white; padding: 30px; border-radius: 10px; text-align: center;
+    background-color: white; padding: 20px; border-radius: 10px; text-align: center;
     box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    max-width: 90vw;
+    width: 700px;
 }
 .confetti { position: absolute; width: 10px; height: 10px; background-color: #f00; opacity: 0; }
 @keyframes confetti-fall { 0% { transform: translateY(-100vh); opacity: 1; } 100% { transform: translateY(100vh) rotate(360deg); opacity: 0; } }
+
+@keyframes popup-fade {
+    0%, 100% { opacity: 0; transform: translateY(20px); }
+    10%, 90% { opacity: 1; transform: translateY(0); }
+}
+.popup-animation {
+    animation: popup-fade 3s ease-in-out forwards;
+}
+@keyframes scorer-popup {
+    0% { transform: translateY(20px); opacity: 0; }
+    10% { transform: translateY(0); opacity: 1; }
+    90% { transform: translateY(0); opacity: 1; }
+    100% { transform: translateY(-20px); opacity: 0; }
+}
+.scorer-popup {
+    animation: scorer-popup 2s ease-in-out forwards;
+}
+.sub-popup {
+    animation: scorer-popup 2s ease-in-out forwards;
+}
 
 .text-glow-orange {
     text-shadow: 0 0 8px rgba(251, 146, 60, 0.7), 0 0 20px rgba(251, 146, 60, 0.5);
